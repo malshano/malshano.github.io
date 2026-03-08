@@ -3,30 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My GitHub Page</title>
+    <title>Malshan Perera Portfolio</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
-            text-align: center;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
         }
         header {
             background-color: #24292e;
             color: white;
-            padding: 20px 0;
+            padding: 20px;
+            text-align: center;
         }
-        h1 {
-            margin: 0;
+        nav {
+            background-color: #0366d6;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-        main {
-            padding: 40px 20px;
+        nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            display: block;
+        }
+        nav a:hover {
+            background-color: #024f9c;
+        }
+        section {
+            padding: 60px 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .projects, .music {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #24292e;
+            color: white;
         }
         a.button {
             display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
+            margin-top: 10px;
+            padding: 10px 15px;
             background-color: #0366d6;
             color: white;
             text-decoration: none;
@@ -35,24 +72,83 @@
         a.button:hover {
             background-color: #024f9c;
         }
-        footer {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #24292e;
-            color: white;
-        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Welcome to My GitHub Page</h1>
+        <h1>Malshan Perera</h1>
+        <p>Hardware Engineer | Electronics Hobbyist | DJ | Carpenter | Coding Enthusiast | </p>
     </header>
-    <main>
-        <p>This is a simple static website hosted on GitHub Pages.</p>
-        <a class="button" href="https://github.com/">Visit GitHub</a>
-    </main>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#projects">Projects</a>
+        <a href="#music">Music</a>
+        <a href="#about">About / Skills</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <section id="home">
+        <h2>Welcome</h2>
+        <p>Hi! I am Malshan, a Hardware engineer and hobbiest. This is my portfolio showcasing my projects, music gigs, and skills in electronics and technology.</p>
+    </section>
+
+    <section id="projects">
+        <h2>Projects</h2>
+        <div class="projects">
+            <div class="card">
+                <h3>Surfboard coffee table</h3>
+                <p>....</p>
+            </div>
+            <div class="card">
+                <h3>Rebuilding a 1981 CB750 Carb </h3>
+                <p>....</p>
+            </div>
+            <div class="card">
+                <h3>DIY Robot Arm</h3>
+                <p>Creating custom RC transmitters with small push buttons for precision control in drone experiments.</p>
+            </div>
+            <div class="card">
+                <h3>Stock Portfolio manager</h3>
+                <p>....</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="music">
+        <h2>Music / DJ</h2>
+        <div class="music">
+            <div class="card">
+                <h3>Millennial Party Set</h3>
+                <p>....</p>
+            </div>
+            <div class="card">
+                <h3>Jungle party Set</h3>
+                <p>....</p>
+            </div>
+            <div class="card">
+                <h3>17 Mai 2025</h3>
+                <p>....</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2>About / Skills</h2>
+        <p>I work as an Hardware Engineer at ScoutDI, specializing in drone systems, hardware design, tuning. Skills include:</p>
+        <ul>
+            <li>FPV Drone Design & Stabilization</li>
+        </ul>
+    </section>
+
+    <section id="contact">
+        <h2>Contact</h2>
+        <p>Reach out via email or follow me on GitHub / social media:</p>
+        <a class="button" href="mailto:your.email@example.com">Email Me</a>
+        <a class="button" href="https://github.com/yourusername">GitHub</a>
+    </section>
+
     <footer>
-        &copy; 2026 My GitHub Page
+        &copy; 2026 Malshan Perera
     </footer>
 </body>
 </html>
