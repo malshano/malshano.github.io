@@ -1,0 +1,168 @@
+/* ---------------- FONT ---------------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    background: #000;
+    color: white;
+}
+
+/* ---------------- HEADER ---------------- */
+header {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+header h1 {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+header p {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+/* ---------------- NAVIGATION ---------------- */
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    background: #111;
+    padding: 10px 0;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+nav a:hover {
+    opacity: 0.7;
+}
+
+/* ---------------- SECTION TITLES ---------------- */
+.section-title {
+    font-size: 36px;
+    text-align: center;
+    margin: 50px 0;
+    font-weight: 600;
+}
+
+/* ---------------- PROJECT GRID ---------------- */
+.project-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+/* ---------------- PROJECT CARD ---------------- */
+.project-card {
+    position: relative;
+    flex: 1 1 22%;       /* 4 cards per row */
+    max-width: 250px;
+    height: 250px;
+    border-radius: 15px;
+    overflow: hidden;
+    display: block;
+    cursor: pointer;
+    opacity: 0;          /* for scroll animation */
+    transform: translateY(30px);
+    transition: transform 0.6s ease, opacity 0.6s ease, flex 0.4s ease;
+    color: white;
+    text-decoration: none;
+}
+
+.project-card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* IMAGE */
+.project-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* CARD TEXT OVERLAY */
+.card-text {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+}
+
+.card-text h3 {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.card-text p {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* HOVER EFFECTS */
+.project-card:hover {
+    flex: 1.3;                /* expand card */
+    transform: translateY(-5px); /* lift effect */
+}
+
+.project-card:hover img {
+    transform: scale(1.05);   /* zoom image */
+}
+
+/* ---------------- HORIZONTAL VIGNETTE ---------------- */
+.project-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,0.35) 100%);
+    border-radius: 15px;
+    transition: background 0.4s ease;
+}
+
+.project-card:hover::before {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,0.5) 100%);
+}
+
+/* ---------------- BUTTONS ---------------- */
+.button {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 10px 5px 0 0;
+    background: #0366d6;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background: #024f9c;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 900px) {
+    .project-card {
+        flex: 1 1 45%;       /* 2 cards per row on tablets */
+        max-width: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .project-card {
+        flex: 1 1 100%;      /* 1 card per row on mobile */
+    }
+}
