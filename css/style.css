@@ -66,9 +66,12 @@ nav a:hover {
 /* ---------------- PROJECT CARD ---------------- */
 .project-card {
     position: relative;
-    flex: 1 1 22%;  /* 4 cards per row */
+    flex: 1 1 22%;       /* 4 cards per row */
     max-width: 250px;
-    height: auto;       /* flexible height */
+    
+    /* Responsive height based on width */
+    aspect-ratio: 5 / 7; /* width / height ratio, adjust for portrait cards */
+    
     border-radius: 15px;
     overflow: hidden;
     cursor: pointer;
@@ -78,13 +81,13 @@ nav a:hover {
     transition: transform 0.3s ease;
 }
 
-/* IMAGE */
-.project-card img {
+.project-card img,
+.project-card video {
     width: 100%;
-    height: auto;    /* maintain aspect ratio */
+    height: 100%;
+    object-fit: cover;   /* fills card and crops edges */
     display: block;
-    object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease; /* keeps hover zoom effect */
 }
 
 /* HOVER EFFECT */
@@ -142,4 +145,17 @@ nav a:hover {
 }
 @media(max-width: 600px) {
     .project-card { flex: 1 1 100%; }
+}
+
+/* ---------------- SCROLL ANIMATION ---------------- */
+
+.animate {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.animate.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
