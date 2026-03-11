@@ -159,3 +159,35 @@ nav a:hover {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* ---------------- CINEMATIC CONTAINER ---------------- */
+.film-section {
+  display: flex;
+  justify-content: center;
+  padding: 50px 20px;
+  background-color: #000; /* dark background for cinematic feel */
+}
+
+.cinema-container {
+  position: relative;
+  max-width: 900px;    /* scales nicely on different screens */
+  width: 100%;
+  aspect-ratio: auto;  /* letterbox style */
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 60px rgba(0,0,0,0.7); /* cinematic glow */
+}
+
+.cinema-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* fills container while keeping aspect ratio */
+  display: block;
+  filter: brightness(0.9) contrast(1.05); /* cinematic color tweak */
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.cinema-video:hover {
+  transform: scale(1.02);
+  filter: brightness(1) contrast(1.1);
+}
