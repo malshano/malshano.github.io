@@ -193,18 +193,14 @@ nav a:hover {
 
 .smoke-video {
   position: absolute;
-  width: 120%;
-  height: 180%;
+  top: 5%;
+  width: 105%;           /* slightly bigger than container */
+  height: 128%;
   object-fit: cover;
-
-  top: -10%;
-  left: -10%;
-
-  opacity: 1;
+  transform: translate(-50%, -50%); /* always centered */
   filter: blur(5px);
   z-index: 1;
-
-animation: smokeDrift 40s linear infinite;
+  animation: smokeDrift 40s linear infinite;
 }
 
 .cinema-video {
