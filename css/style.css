@@ -181,10 +181,10 @@ nav a:hover {
 
 .cinema-container {
   position: relative;
-  width: 59vw;            /* 59% of viewport width */
-  max-width: 90vw;        /* don’t exceed 90% of screen */
-  height: auto;
-  aspect-ratio: 9/16;     /* maintain 9:16 video ratio */
+  height: 80vh;          /* base scaling on viewport height */
+  max-height: 80vh;      
+  width: auto;           /* width auto, scales with aspect ratio */
+  aspect-ratio: 9/16;    
   overflow: hidden;
   border-radius: 10px;
   box-shadow: 0 0 120px rgba(0,0,0,0.9);
