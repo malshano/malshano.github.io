@@ -181,21 +181,20 @@ nav a:hover {
 
 .cinema-container {
   position: relative;
-  max-width: 900px;    /* scales nicely on different screens */
-  max-height: 80vh;
-
-  width: 100%;
-  aspect-ratio: auto;  /* letterbox style */
+  width: 59vw;            /* 59% of viewport width */
+  max-width: 90vw;        /* don’t exceed 90% of screen */
+  height: auto;
+  aspect-ratio: 9/16;     /* maintain 9:16 video ratio */
   overflow: hidden;
   border-radius: 10px;
-  box-shadow: 0 0 120px rgba(0,0,0,0.9); /* cinematic glow */
+  box-shadow: 0 0 120px rgba(0,0,0,0.9);
 }
 
 
 .smoke-video {
   position: absolute;
   width: 120%;
-  height: 150%;
+  height: 180%;
   object-fit: cover;
 
   top: -10%;
@@ -213,7 +212,7 @@ animation: smokeDrift 40s linear infinite;
   z-index: 2;
   width: 100%;
   height: 100%;
-  object-fit: cover;   /* fills container while keeping aspect ratio */
+  object-fit: contain;   /* fills container while keeping aspect ratio */
   display: block;
   filter: brightness(0.9) contrast(1.05); /* cinematic color tweak */
   transition: transform 0.5s ease, filter 0.5s ease;
