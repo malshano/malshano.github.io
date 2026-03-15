@@ -41,20 +41,39 @@ const observer = new IntersectionObserver((entries) => {
 
     entries.forEach(entry => {
 
-        const video = entry.target.querySelector(".cinema-video");
-
-        if(!video) return;
+        const htmlVideo = entry.target.querySelector("video.cinema-video");
+        const iframe = entry.target.querySelector("iframe");
 
         if(entry.isIntersecting){
-            video.play().catch(()=>{});
+
+            if(htmlVideo){
+                htmlVideo.play().catch(()=>{});
+            }
+
+            if(iframe && ytPlayer){
+                ytPlayer.playVideo();
+            }
+
         } else {
-            video.pause();
+
+            if(htmlVideo){
+                htmlVideo.pause();
+            }
+
+            if(iframe && ytPlayer){
+                ytPlayer.pauseVideo();
+            }
+
         }
 
     });
 
-}, {
-    threshold: 0.6
-});
+}, { threshold: 0.6 });
 
 slides.forEach(slide => observer.observe(slide));
+
+let ytPlayer;
+
+function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player("yt-film3");
+}
