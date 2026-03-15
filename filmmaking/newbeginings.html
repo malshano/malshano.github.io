@@ -1,40 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Films | Malshan Perera</title>
-<link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Films | Malshan Perera</title>
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
+  <video class="films-header" autoplay muted loop playsinline>
+    <source src="../assets/videos/cloudsheaderfilm.mp4" type="video/mp4">
+  </video>
+
 <header>
-    <h1>Films</h1>
-    <p>New Beginnings, from Sri Lanka to settling down in Norway</p>
+  <h1>Films</h1>
+  <p>Visual moments from my life</p>
+
 </header>
 
 <nav>
-    <a href="../">Home</a>
-    <a href="../projects/">Projects</a>
-    <a href="../#filmmaking">Films</a>
+  <a href="../">Home</a>
+  <a href="../projects/">Projects</a>
+  <a href="../#filmmaking">Films</a>
 </nav>
 
-  <!-- smoke background -->
-  <video class="smoke-video" autoplay muted loop playsinline>
-    <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
-  </video>
 
-<section class="film-section">
-  <div class="cinema-container">
 
-    <video class="cinema-video" controls autoplay muted loop poster="../assets/images/drone-thumbnail.webp">
-      <source src="../assets/videos/newbeginingsfull.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
+<section id="film-scroll">
+  
+
+  <div class="film-scroll-wrapper">
+
+    <div class="film-scroll-track">
+
+      <!-- Video 1 -->
+      <div class="film-slide" id="film1newbeginning">
+      <!-- smoke background -->
+        <video class="smoke-video" autoplay muted loop playsinline>
+          <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
+        </video>
+        <div class="cinema-container ratio-vertical">
+          <video class="cinema-video" controls muted loop poster="../assets/images/newbeginingsthumbnail.jpg">
+            <source src="../assets/videos/newbeginingsfull.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <!-- Video 2 -->
+      <div class="film-slide" id="film2paris">
+      <!-- smoke background -->
+        <video class="smoke-video" autoplay muted loop playsinline>
+          <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
+        </video>
+        <div class="cinema-container ratio-vertical">
+          <video class="cinema-video" controls  muted loop>
+            <source src="../assets/videos/parisfullfilm.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+    <!-- Video 3 -->
+    <div class="film-slide" id="film3NTNU">
+      <!-- smoke background -->
+        <video class="smoke-video" autoplay muted loop playsinline>
+          <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
+        </video>
+      <div class="cinema-container">
+        <iframe 
+          class="cinema-video ratio-horizontal"
+          src="https://www.youtube.com/embed/JneX-grPSeA?autoplay=1&mute=1&loop=1&playlist=JneX-grPSeA&controls=1"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+
+
+      </div>
+    </div>
+
+      <!-- Video 4 -->
+      <div class="film-slide" id="film4srilanka">
+      <!-- smoke background -->
+        <video class="smoke-video" autoplay muted loop playsinline>
+          <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
+        </video>
+        <div class="cinema-container">
+          <video class="cinema-video" controls autoplay muted loop>
+            <source src="../assets/videos/srilankapromo.mp4" type="video/mp4">
+          </video>
+          <video class="smoke-video" autoplay muted loop playsinline>
+            <source src="../assets/videos/smoke4.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      
+
+    </div>
+
   </div>
+
 </section>
-
+<script src="../js/navfilm.js"></script>
 <script src="../js/film.js"></script>
-
 </body>
 </html>

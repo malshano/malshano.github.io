@@ -171,63 +171,129 @@ nav a:hover {
     transform: translateY(0);
 }
 
-/* ---------------- CINEMATIC CONTAINER ---------------- */
-.film-section {
-  display: flex;
-  justify-content: center;
-  padding: 50px 20px;
-  background-color: #000; /* dark background for cinematic feel */
+/* ---------------- FILM SCROLL SLIDER WITH CINEMATIC EFFECT ---------------- */
+
+#film-scroll {
+    height: calc(100vh * 4); /* number of videos * 100vh */
+}
+
+.film-scroll-wrapper {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.film-scroll-track {
+    display: flex;
+    height: 100%;
+    width: calc(100vw * 4); /* number of videos */
+    will-change: transform;
+    transition: transform 0.5s ease-out;
+}
+
+.film-slide {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .cinema-container {
-  position: relative;
-  height: 80vh;          /* base scaling on viewport height */
-  max-height: 80vh;      
-  width: auto;           /* width auto, scales with aspect ratio */
-  aspect-ratio: 9/16;    
-  overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0 0 120px rgba(0,0,0,0.9);
-}
-
-
-.smoke-video {
-  position: absolute;
-  top: 5%;
-  width: 105%;           /* slightly bigger than container */
-  height: 128%;
-  object-fit: cover;
-  transform: translate(-50%, -50%); /* always centered */
-  filter: blur(5px);
-  z-index: 1;
-  animation: smokeDrift 40s linear infinite;
+    position: relative;
+    height: 80vh;
+    max-height: 100vh;
+    width: auto;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 0 120px rgba(0,0,0,0.9);
 }
 
 .cinema-video {
-  position: relative; 
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;   /* fills container while keeping aspect ratio */
-  display: block;
-  filter: brightness(0.9) contrast(1.05); /* cinematic color tweak */
-  transition: transform 0.5s ease, filter 0.5s ease;
+    position: relative; 
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: brightness(0.9) contrast(1.05);
+    transition: transform 0.5s ease, filter 0.5s ease;
 }
 
 .cinema-video:hover {
-  transform: scale(1.02);
-  filter: brightness(1) contrast(1.1);
+    transform: scale(1.02);
+    filter: brightness(1) contrast(1.1);
 }
 
-/* slow parallax movement */
-@keyframes smokeDrift {
-  0% {
-    transform: translateY(0) scale(1.1);
-  }
-  50% {
-    transform: translateY(-30px) scale(1.2);
-  }
-  100% {
-    transform: translateY(0) scale(1.1);
-  }
+.smoke-video {
+    position: absolute;
+    top: 5%;
+    width: 23%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    filter: blur(5px);
+    z-index: 1;
+    animation: smokeDrift 40s linear infinite;
+    background: linear-gradient(
+        to right,
+        rgba(0,0,0,0.9) 0%,
+        rgba(0,0,0,0) 20%,
+        rgba(0,0,0,0) 80%,
+        rgba(0,0,0,0.9) 100%
+    );
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 20%,
+        black 80%,
+        transparent 100%
+    );
 }
+
+@keyframes smokeDrift {
+    0% { transform: translateY(0) scale(1.1); }
+    50% { transform: translateY(-30px) scale(1.2); }
+    100% { transform: translateY(0) scale(1.1); }
+}
+
+.ratio-vertical {
+  aspect-ratio: 9 / 16;
+}
+
+.ratio-horizontal {
+  aspect-ratio: 16 / 9;
+}
+
+.ratio-square {
+  aspect-ratio: 1 / 1;
+}
+
+.films-header {
+    position: absolute;
+    top: -50%;
+    left: 0;
+    width: 100%;
+    z-index: ;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    background: linear-gradient(
+        to right,
+        rgba(0,0,0,0.9) 0%,
+        rgba(0,0,0,0) 20%,
+        rgba(0,0,0,0) 80%,
+        rgba(0,0,0,0.9) 100%
+    );
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 20%,
+        black 80%,
+        transparent 100%
+    );
+}
+
