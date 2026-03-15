@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Films | Malshan Perera</title>
   <link rel="stylesheet" href="../css/style.css">
+  <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
@@ -40,7 +41,7 @@
           <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
         </video>
         <div class="cinema-container ratio-vertical">
-          <video class="cinema-video" controls muted loop poster="../assets/images/newbeginingsthumbnail.jpg">
+          <video class="cinema-video" controls poster="../assets/images/newbeginingsthumbnail.jpg">
             <source src="../assets/videos/newbeginingsfull.mp4" type="video/mp4">
           </video>
         </div>
@@ -49,11 +50,11 @@
       <!-- Video 2 -->
       <div class="film-slide" id="film2paris">
       <!-- smoke background -->
-        <video class="smoke-video" autoplay muted loop playsinline>
+        <video class="smoke-video" autoplay loop playsinline>
           <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
         </video>
         <div class="cinema-container ratio-vertical">
-          <video class="cinema-video" controls  muted loop>
+          <video class="cinema-video" controls muted loop>
             <source src="../assets/videos/parisfullfilm.mp4" type="video/mp4">
           </video>
         </div>
@@ -67,11 +68,11 @@
         </video>
       <div class="cinema-container">
         <iframe 
+          id="yt-film3"
           class="cinema-video ratio-horizontal"
-          src="https://www.youtube.com/embed/JneX-grPSeA?autoplay=1&mute=1&loop=1&playlist=JneX-grPSeA&controls=1"
-          title="YouTube video player"
+          src="https://www.youtube.com/embed/JneX-grPSeA?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=JneX-grPSeA"
           frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
         </iframe>
 
@@ -86,11 +87,8 @@
           <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
         </video>
         <div class="cinema-container">
-          <video class="cinema-video" controls autoplay muted loop>
+          <video class="cinema-video" controls loop>
             <source src="../assets/videos/srilankapromo.mp4" type="video/mp4">
-          </video>
-          <video class="smoke-video" autoplay muted loop playsinline>
-            <source src="../assets/videos/smoke4.mp4" type="video/mp4">
           </video>
         </div>
       </div>
