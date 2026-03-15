@@ -104,11 +104,46 @@
       aspect-ratio: 16 / 9;
       object-fit: cover;
       display: block;
-      transition: transform 0.4s ease;
+      /* blurred + scaled so edges don't show white */
+      filter: blur(14px);
+      transform: scale(1.08);
+      transition: filter 0.6s ease, transform 0.6s ease;
     }
 
-    .gig-card:hover video {
-      transform: scale(1.03);
+    .gig-card.revealed video {
+      filter: blur(0);
+      transform: scale(1);
+    }
+
+    /* "Click to reveal" hint overlay */
+    .gig-reveal-hint {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .gig-reveal-hint svg {
+      width: 40px;
+      height: 40px;
+      opacity: 0.9;
+    }
+
+    .gig-reveal-hint span {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    .gig-card.revealed .gig-reveal-hint {
+      opacity: 0;
     }
 
     .gig-card-label {
@@ -126,7 +161,7 @@
       transition: opacity 0.3s ease;
     }
 
-    .gig-card:hover .gig-card-label {
+    .gig-card.revealed:hover .gig-card-label {
       opacity: 1;
     }
 
@@ -223,7 +258,7 @@
       <source src="../assets/videos/dj/djbackground.mp4" type="video/mp4">
     </video>
     <div class="dj-hero-overlay">
-      <h1>DJ Malshan</h1>
+      <h1>MALSHANO</h1>
       <p>Live sets &amp; gig highlights</p>
     </div>
   </div>
@@ -239,43 +274,63 @@
   <!-- VIDEO GIGS -->
   <div class="section-label">
     <h2>Gig Highlights</h2>
-    <p>Click to play — hover for controls</p>
+    <p>Click a card to reveal &amp; play</p>
   </div>
 
   <div class="gig-grid">
 
-    <div class="gig-card" onclick="togglePlay(this)">
-      <video loop playsinline preload="none">
+    <div class="gig-card" onclick="revealCard(this)">
+      <video autoplay muted loop playsinline>
         <source src="../assets/videos/dj/dj1.mp4" type="video/mp4">
       </video>
+      <div class="gig-reveal-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="white" stroke="none"/></svg>
+        <span>Click to reveal</span>
+      </div>
       <div class="gig-card-label">Gig 01</div>
     </div>
 
-    <div class="gig-card" onclick="togglePlay(this)">
-      <video loop playsinline preload="none">
+    <div class="gig-card" onclick="revealCard(this)">
+      <video autoplay muted loop playsinline>
         <source src="../assets/videos/dj/dj2.mp4" type="video/mp4">
       </video>
+      <div class="gig-reveal-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="white" stroke="none"/></svg>
+        <span>Click to reveal</span>
+      </div>
       <div class="gig-card-label">Gig 02</div>
     </div>
 
-    <div class="gig-card" onclick="togglePlay(this)">
-      <video loop playsinline preload="none">
+    <div class="gig-card" onclick="revealCard(this)">
+      <video autoplay muted loop playsinline>
         <source src="../assets/videos/dj/dj3.mp4" type="video/mp4">
       </video>
+      <div class="gig-reveal-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="white" stroke="none"/></svg>
+        <span>Click to reveal</span>
+      </div>
       <div class="gig-card-label">Gig 03</div>
     </div>
 
-    <div class="gig-card" onclick="togglePlay(this)">
-      <video loop playsinline preload="none">
+    <div class="gig-card" onclick="revealCard(this)">
+      <video autoplay muted loop playsinline>
         <source src="../assets/videos/dj/dj4.mp4" type="video/mp4">
       </video>
+      <div class="gig-reveal-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="white" stroke="none"/></svg>
+        <span>Click to reveal</span>
+      </div>
       <div class="gig-card-label">Gig 04</div>
     </div>
 
-    <div class="gig-card full-width" onclick="togglePlay(this)">
-      <video loop playsinline preload="none">
+    <div class="gig-card full-width" onclick="revealCard(this)">
+      <video autoplay muted loop playsinline>
         <source src="../assets/videos/dj/dj5.mp4" type="video/mp4">
       </video>
+      <div class="gig-reveal-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="white" stroke="none"/></svg>
+        <span>Click to reveal</span>
+      </div>
       <div class="gig-card-label">Gig 05</div>
     </div>
 
@@ -319,19 +374,18 @@
   </div>
 
   <script>
-    // Click to play/pause gig videos
-    function togglePlay(card) {
-      const video = card.querySelector('video');
-      if (video.paused) {
-        // Pause all other gig videos first
-        document.querySelectorAll('.gig-card video').forEach(v => {
-          if (v !== video) v.pause();
-        });
-        video.play();
-        card.querySelector('.gig-card-label').style.opacity = '1';
-      } else {
-        video.pause();
-      }
+    // Click to remove blur and reveal the video; pause all others
+    function revealCard(card) {
+      document.querySelectorAll('.gig-card').forEach(other => {
+        if (other !== card) {
+          other.querySelector('video').pause();
+          other.classList.remove('revealed');
+          other.onclick = () => revealCard(other);
+        }
+      });
+      card.classList.add('revealed');
+      card.querySelector('video').play();
+      card.onclick = null;
     }
   </script>
 

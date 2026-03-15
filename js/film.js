@@ -1,48 +1,107 @@
-// -------------------------------
-// Scroll-controlled horizontal video slider with seamless looping
-// -------------------------------
+// -----------------------------------------------
+// Film scroll slider – optimised & conflict-free
+// -----------------------------------------------
 
 const filmSection = document.querySelector("#film-scroll");
-const filmTrack = document.querySelector(".film-scroll-track");
+const filmTrack   = document.querySelector(".film-scroll-track");
 
 if (filmSection && filmTrack) {
-    const slides = Array.from(filmTrack.querySelectorAll(".film-slide"));
-    const totalVideos = slides.length;
-    let currentIndex = 0;
+    const slides        = Array.from(filmTrack.querySelectorAll(".film-slide"));
+    const totalVideos   = slides.length;
+    const scrollSegments = totalVideos + 1; // extra segment for loop-back
+    let   currentIndex  = 0;
+    let   rafPending    = false;
 
-    const scrollLength = filmSection.offsetHeight - window.innerHeight;
-    const scrollSegments = totalVideos + 1; // extra segment loops back to first
+    // Recomputed each time so window resize doesn't break things
+    function getScrollLength() {
+        return filmSection.offsetHeight - window.innerHeight;
+    }
 
-    // Build a map of slide IDs for hash navigation
+    // Slide ID → index for hash navigation
     const slideIdToIndex = {};
     slides.forEach((slide, i) => { if (slide.id) slideIdToIndex[slide.id] = i; });
 
-    // Scroll the page to center on a specific slide index
+    // Navigation dots
+    const dots = Array.from(filmSection.querySelectorAll(".film-dot"));
+    function updateDots(index) {
+        dots.forEach((d, i) => d.classList.toggle("active", i === index));
+    }
+    dots.forEach((dot, i) => dot.addEventListener("click", () => scrollToSlide(i)));
+
+    // Scroll the page to centre on a slide
     function scrollToSlide(index, smooth = true) {
-        const progress = (index + 0.5) / scrollSegments;
-        const targetScroll = filmSection.offsetTop + progress * scrollLength;
+        const progress     = (index + 0.5) / scrollSegments;
+        const targetScroll = filmSection.offsetTop + progress * getScrollLength();
         window.scrollTo({ top: targetScroll, behavior: smooth ? "smooth" : "instant" });
     }
 
+    // Play/pause HTML5 cinema videos
+    function setVideos(index) {
+        slides.forEach((slide, i) => {
+            const vid = slide.querySelector("video.cinema-video");
+            if (!vid) return;
+            if (i === index) {
+                vid.play().catch(() => {});
+            } else {
+                vid.pause();
+            }
+        });
+    }
+
+    // YouTube player (controlled via API, not iframe src autoplay)
+    let ytPlayer;
+    const ytSlideIndex = slides.findIndex(s => s.id === "film3NTNU");
+
+    // Must be global so the YouTube iframe API can call it
+    window.onYouTubeIframeAPIReady = function () {
+        ytPlayer = new YT.Player("yt-film3", {
+            events: {
+                onReady() {
+                    if (currentIndex !== ytSlideIndex) ytPlayer.pauseVideo();
+                }
+            }
+        });
+    };
+
+    function setYouTube(index) {
+        if (!ytPlayer || typeof ytPlayer.playVideo !== "function") return;
+        if (index === ytSlideIndex) {
+            ytPlayer.playVideo();
+        } else {
+            ytPlayer.pauseVideo();
+        }
+    }
+
+    // Apply a slide change: move track, update media, update dots
     function applySlide(index, animate) {
         const loopingBack = currentIndex === totalVideos - 1 && index === 0;
         currentIndex = index;
-        filmTrack.style.transition = (animate && !loopingBack) ? "transform 0.6s ease" : "none";
+
+        if (animate && !loopingBack) {
+            filmTrack.classList.remove("no-transition");
+        } else {
+            filmTrack.classList.add("no-transition");
+            void filmTrack.offsetWidth; // force reflow so transition re-enables cleanly
+        }
+
         filmTrack.style.transform = `translateX(-${currentIndex * window.innerWidth}px)`;
-        slides.forEach(slide => {
-            const vid = slide.querySelector("video");
-            if (vid) vid.pause();
-        });
-        const currentVideo = slides[currentIndex].querySelector("video");
-        if (currentVideo) currentVideo.play().catch(() => {});
+
+        setVideos(currentIndex);
+        setYouTube(currentIndex);
+        updateDots(currentIndex);
+
+        // Re-enable transition after instant jump
+        if (!animate || loopingBack) {
+            requestAnimationFrame(() => filmTrack.classList.remove("no-transition"));
+        }
     }
 
     function updateSlider(animate) {
+        const scrollLength = getScrollLength();
         const rect = filmSection.getBoundingClientRect();
         let progress = -rect.top / scrollLength;
         progress = Math.max(0, Math.min(progress, 1));
 
-        // Map scroll progress across one extra segment, then wrap back to 0
         let targetIndex = Math.floor(progress * scrollSegments);
         if (targetIndex >= totalVideos) targetIndex = 0;
 
@@ -51,27 +110,61 @@ if (filmSection && filmTrack) {
         }
     }
 
-    // -------------------------------
-    // Touch swipe support
-    // -------------------------------
-    let touchStartX = 0;
-    let touchStartY = 0;
+    // rAF-throttled scroll — prevents jank from firing every pixel
+    window.addEventListener("scroll", () => {
+        if (rafPending) return;
+        rafPending = true;
+        requestAnimationFrame(() => {
+            updateSlider(true);
+            updateFilmNav();
+            rafPending = false;
+        });
+    }, { passive: true });
 
+    // Recalculate track position on resize
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            filmTrack.classList.add("no-transition");
+            filmTrack.style.transform = `translateX(-${currentIndex * window.innerWidth}px)`;
+            requestAnimationFrame(() => filmTrack.classList.remove("no-transition"));
+        }, 100);
+    });
+
+    // Keyboard left/right arrow navigation
+    window.addEventListener("keydown", (e) => {
+        if (!filmSection.getBoundingClientRect().height) return;
+        const rect = filmSection.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (!inView) return;
+        if (e.key === "ArrowRight") scrollToSlide((currentIndex + 1) % totalVideos);
+        if (e.key === "ArrowLeft")  scrollToSlide((currentIndex - 1 + totalVideos) % totalVideos);
+    });
+
+    // Touch swipe
+    let touchStartX = 0, touchStartY = 0;
     const filmWrapper = filmSection.querySelector(".film-scroll-wrapper");
 
-    filmWrapper.addEventListener("touchstart", (e) => {
+    // Floating film-nav — only show once the regular nav has scrolled off-screen
+    const filmNav = filmWrapper.querySelector(".film-nav");
+    function updateFilmNav() {
+        const sectionTop = filmSection.getBoundingClientRect().top;
+        filmNav?.classList.toggle("visible", sectionTop <= 0);
+    }
+
+    filmWrapper.addEventListener("touchstart", e => {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
     }, { passive: true });
 
-    filmWrapper.addEventListener("touchmove", (e) => {
+    filmWrapper.addEventListener("touchmove", e => {
         const dx = touchStartX - e.touches[0].clientX;
         const dy = touchStartY - e.touches[0].clientY;
-        // Prevent vertical page scroll when swiping horizontally
         if (Math.abs(dx) > Math.abs(dy)) e.preventDefault();
     }, { passive: false });
 
-    filmWrapper.addEventListener("touchend", (e) => {
+    filmWrapper.addEventListener("touchend", e => {
         const dx = touchStartX - e.changedTouches[0].clientX;
         const dy = touchStartY - e.changedTouches[0].clientY;
         if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
@@ -80,19 +173,22 @@ if (filmSection && filmTrack) {
         }
     });
 
-    // -------------------------------
-    // Mouse drag support (desktop)
-    // -------------------------------
-    let mouseStartX = 0;
-    let isDragging = false;
+    // Carousel arrow buttons
+    const prevBtn = filmWrapper.querySelector(".film-arrow-prev");
+    const nextBtn = filmWrapper.querySelector(".film-arrow-next");
+    if (prevBtn) prevBtn.addEventListener("click", () => scrollToSlide((currentIndex - 1 + totalVideos) % totalVideos));
+    if (nextBtn) nextBtn.addEventListener("click", () => scrollToSlide((currentIndex + 1) % totalVideos));
 
-    filmWrapper.addEventListener("mousedown", (e) => {
+    // Mouse drag
+    let mouseStartX = 0, isDragging = false;
+
+    filmWrapper.addEventListener("mousedown", e => {
         mouseStartX = e.clientX;
-        isDragging = true;
+        isDragging  = true;
         filmWrapper.style.cursor = "grabbing";
     });
 
-    window.addEventListener("mouseup", (e) => {
+    window.addEventListener("mouseup", e => {
         if (!isDragging) return;
         isDragging = false;
         filmWrapper.style.cursor = "";
@@ -103,80 +199,19 @@ if (filmSection && filmTrack) {
         }
     });
 
-    // If URL hash matches a slide ID, scroll to show that slide
+    // Unmute only the currently playing video on first interaction
+    document.body.addEventListener("click", () => {
+        const vid = slides[currentIndex]?.querySelector("video.cinema-video");
+        if (vid) { vid.muted = false; vid.play().catch(() => {}); }
+    }, { once: true });
+
+    // Hash navigation
     const hash = window.location.hash.slice(1);
     if (hash && slideIdToIndex[hash] !== undefined) {
         scrollToSlide(slideIdToIndex[hash], false);
     }
 
-    // Initialize transform on load (handles any initial scroll position)
+    // Initialise
     updateSlider(false);
-
-    window.addEventListener("scroll", () => updateSlider(true));
+    updateFilmNav();
 }
-
-// -------------------------------
-// Intersection Observer: Auto-play/Pause videos and YouTube iframes
-// -------------------------------
-
-const slides = document.querySelectorAll(".film-slide");
-
-/**
- * IntersectionObserver callback
- * Plays HTML5 video or YouTube iframe when slide is mostly visible (threshold 0.6)
- * Pauses videos when slide is not visible
- */
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        const htmlVideo = entry.target.querySelector("video.cinema-video");
-        const iframe = entry.target.querySelector("iframe");
-
-        if(entry.isIntersecting){
-            if(htmlVideo){
-                htmlVideo.play().catch(()=>{});
-            }
-            if(iframe && ytPlayer){
-                ytPlayer.playVideo();
-            }
-        } else {
-            if(htmlVideo){
-                htmlVideo.pause();
-            }
-            if(iframe && ytPlayer){
-                ytPlayer.pauseVideo();
-            }
-        }
-    });
-}, { threshold: 0.6 }); // slide must be 60% visible to trigger
-
-slides.forEach(slide => observer.observe(slide));
-
-// -------------------------------
-// YouTube Iframe API
-// -------------------------------
-
-let ytPlayer;
-
-/**
- * Called by YouTube Iframe API when ready
- * Initializes the YouTube player for the embedded video
- */
-function onYouTubeIframeAPIReady() {
-    ytPlayer = new YT.Player("yt-film3");
-}
-
-// -------------------------------
-// Unmute all HTML5 videos on first user interaction
-// -------------------------------
-
-/**
- * Some browsers block autoplay with sound until user interacts
- * This listener un-mutes all videos on first click and plays them
- */
-document.body.addEventListener("click", () => {
-    const videos = document.querySelectorAll(".cinema-video");
-    videos.forEach(v => {
-        v.muted = false;
-        v.play().catch(()=>{});
-    });
-}, { once: true }); // only trigger on first click

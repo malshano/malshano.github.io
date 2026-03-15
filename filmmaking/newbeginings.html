@@ -32,6 +32,24 @@
 
   <div class="film-scroll-wrapper">
 
+    <!-- Nav stays visible over every slide -->
+    <nav class="film-nav">
+      <a href="../">Home</a>
+      <a href="../projects/">Projects</a>
+      <a href="../#filmmaking">Films</a>
+    </nav>
+
+    <!-- Carousel arrows -->
+    <button class="film-arrow film-arrow-prev" aria-label="Previous film">&#8249;</button>
+    <button class="film-arrow film-arrow-next" aria-label="Next film">&#8250;</button>
+
+    <div class="film-dots">
+      <button class="film-dot active" aria-label="Film 1"></button>
+      <button class="film-dot" aria-label="Film 2"></button>
+      <button class="film-dot" aria-label="Film 3"></button>
+      <button class="film-dot" aria-label="Film 4"></button>
+    </div>
+
     <div class="film-scroll-track">
 
       <!-- Video 1 -->
@@ -50,11 +68,11 @@
       <!-- Video 2 -->
       <div class="film-slide" id="film2paris">
       <!-- smoke background -->
-        <video class="smoke-video" autoplay loop playsinline>
+        <video class="smoke-video" autoplay muted loop playsinline>
           <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
         </video>
         <div class="cinema-container ratio-vertical">
-          <video class="cinema-video" controls muted loop>
+          <video class="cinema-video" controls muted loop preload="none">
             <source src="../assets/videos/parisfullfilm.mp4" type="video/mp4">
           </video>
         </div>
@@ -67,16 +85,14 @@
           <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
         </video>
       <div class="cinema-container">
-        <iframe 
+        <iframe
           id="yt-film3"
           class="cinema-video ratio-horizontal"
-          src="https://www.youtube.com/embed/JneX-grPSeA?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=JneX-grPSeA"
+          src="https://www.youtube.com/embed/JneX-grPSeA?enablejsapi=1&mute=1&loop=1&playlist=JneX-grPSeA"
           frameborder="0"
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
         </iframe>
-
-
       </div>
     </div>
 
@@ -87,7 +103,7 @@
           <source src="../assets/videos/backgroudclouds.mp4" type="video/mp4">
         </video>
         <div class="cinema-container">
-          <video class="cinema-video" controls loop>
+          <video class="cinema-video" controls loop preload="none">
             <source src="../assets/videos/srilankapromo.mp4" type="video/mp4">
           </video>
         </div>
