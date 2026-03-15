@@ -77,3 +77,12 @@ let ytPlayer;
 function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player("yt-film3");
 }
+
+
+document.body.addEventListener("click", () => {
+    const videos = document.querySelectorAll(".cinema-video");
+    videos.forEach(v => {
+        v.muted = false;
+        v.play().catch(()=>{});
+    });
+}, { once: true }); // only first click needed
