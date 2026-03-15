@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJ Gigs | Malshan Perera</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+
+    /* ---- HERO ---- */
+    .dj-hero {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dj-hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .dj-hero-overlay {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 40px 60px;
+      border-radius: 16px;
+      backdrop-filter: blur(4px);
+    }
+
+    .dj-hero-overlay h1 {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin: 0 0 12px;
+      text-transform: uppercase;
+    }
+
+    .dj-hero-overlay p {
+      font-size: 18px;
+      opacity: 0.75;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: sticky;
+      top: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      padding: 14px 0;
+      z-index: 100;
+    }
+
+    /* ---- SECTION LABELS ---- */
+    .section-label {
+      text-align: center;
+      padding: 60px 20px 30px;
+    }
+
+    .section-label h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin: 0 0 10px;
+      text-transform: uppercase;
+    }
+
+    .section-label p {
+      font-size: 15px;
+      opacity: 0.55;
+      margin: 0;
+    }
+
+    /* ---- VIDEO GRID ---- */
+    .gig-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .gig-card {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #111;
+      cursor: pointer;
+    }
+
+    .gig-card video {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .gig-card:hover video {
+      transform: scale(1.03);
+    }
+
+    .gig-card-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 32px 16px 14px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .gig-card:hover .gig-card-label {
+      opacity: 1;
+    }
+
+    /* Full-width card for the 5th (odd one out) */
+    .gig-card.full-width {
+      grid-column: 1 / -1;
+      max-width: 628px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ---- AUDIO SECTION ---- */
+    .audio-section {
+      background: #0a0a0a;
+      border-top: 1px solid #1f1f1f;
+      padding: 60px 24px 80px;
+    }
+
+    .audio-grid {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .audio-track {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 18px 22px;
+      transition: border-color 0.2s ease;
+    }
+
+    .audio-track:hover {
+      border-color: #555;
+    }
+
+    .audio-track-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .audio-track-info h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .audio-track-info span {
+      font-size: 12px;
+      opacity: 0.45;
+      letter-spacing: 0.5px;
+    }
+
+    .audio-track audio {
+      flex-shrink: 0;
+      width: 280px;
+      height: 36px;
+      accent-color: #fff;
+    }
+
+    .audio-placeholder {
+      text-align: center;
+      padding: 40px;
+      border: 1px dashed #333;
+      border-radius: 12px;
+      opacity: 0.4;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 600px) {
+      .dj-hero-overlay h1 { font-size: 38px; }
+      .dj-hero-overlay { padding: 28px 30px; }
+      .audio-track { flex-direction: column; align-items: flex-start; }
+      .audio-track audio { width: 100%; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="dj-hero">
+    <video class="dj-hero-video" autoplay muted loop playsinline>
+      <source src="../assets/videos/dj/djbackground.mp4" type="video/mp4">
+    </video>
+    <div class="dj-hero-overlay">
+      <h1>DJ Malshan</h1>
+      <p>Live sets &amp; gig highlights</p>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="../">Home</a>
+    <a href="../#music">Music</a>
+    <a href="../#filmmaking">Films</a>
+    <a href="../#projects">Projects</a>
+  </nav>
+
+  <!-- VIDEO GIGS -->
+  <div class="section-label">
+    <h2>Gig Highlights</h2>
+    <p>Click to play — hover for controls</p>
+  </div>
+
+  <div class="gig-grid">
+
+    <div class="gig-card" onclick="togglePlay(this)">
+      <video loop playsinline preload="none">
+        <source src="../assets/videos/dj/dj1.mp4" type="video/mp4">
+      </video>
+      <div class="gig-card-label">Gig 01</div>
+    </div>
+
+    <div class="gig-card" onclick="togglePlay(this)">
+      <video loop playsinline preload="none">
+        <source src="../assets/videos/dj/dj2.mp4" type="video/mp4">
+      </video>
+      <div class="gig-card-label">Gig 02</div>
+    </div>
+
+    <div class="gig-card" onclick="togglePlay(this)">
+      <video loop playsinline preload="none">
+        <source src="../assets/videos/dj/dj3.mp4" type="video/mp4">
+      </video>
+      <div class="gig-card-label">Gig 03</div>
+    </div>
+
+    <div class="gig-card" onclick="togglePlay(this)">
+      <video loop playsinline preload="none">
+        <source src="../assets/videos/dj/dj4.mp4" type="video/mp4">
+      </video>
+      <div class="gig-card-label">Gig 04</div>
+    </div>
+
+    <div class="gig-card full-width" onclick="togglePlay(this)">
+      <video loop playsinline preload="none">
+        <source src="../assets/videos/dj/dj5.mp4" type="video/mp4">
+      </video>
+      <div class="gig-card-label">Gig 05</div>
+    </div>
+
+  </div>
+
+  <!-- AUDIO MIXES -->
+  <div class="audio-section">
+
+    <div class="section-label" style="padding-top: 0;">
+      <h2>Mixes</h2>
+      <p>Full sets you can listen to</p>
+    </div>
+
+    <div class="audio-grid">
+
+      <!--
+        TO ADD A MIX: copy one .audio-track block below,
+        update the <source src=""> path and the track name/date.
+        Supported formats: .mp3  .ogg  .wav
+      -->
+
+      <!-- Example track (uncomment and fill in src when ready):
+
+      <div class="audio-track">
+        <div class="audio-track-info">
+          <h3>Mix Title Here</h3>
+          <span>Venue · Month Year</span>
+        </div>
+        <audio controls>
+          <source src="../assets/audio/mix1.mp3" type="audio/mpeg">
+        </audio>
+      </div>
+
+      -->
+
+      <div class="audio-placeholder">
+        Audio mixes coming soon — drop your .mp3 files into assets/audio/ and uncomment a track above
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Click to play/pause gig videos
+    function togglePlay(card) {
+      const video = card.querySelector('video');
+      if (video.paused) {
+        // Pause all other gig videos first
+        document.querySelectorAll('.gig-card video').forEach(v => {
+          if (v !== video) v.pause();
+        });
+        video.play();
+        card.querySelector('.gig-card-label').style.opacity = '1';
+      } else {
+        video.pause();
+      }
+    }
+  </script>
+
+</body>
+</html>
