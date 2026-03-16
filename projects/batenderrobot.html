@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bartender Robot — ESP32 WiFi-Controlled Drink Dispenser</title>
+    <link rel="stylesheet" href="../css/style_projects.css">
+    <style>
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 1.8em 0;
+        }
+        @media (max-width: 600px) {
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+        .feature-card {
+            background: #0d0d0d;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .feature-card .icon {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+        .feature-card h4 {
+            color: white;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .feature-card p {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.45);
+            margin: 0;
+            line-height: 1.6;
+        }
+        .rule-list {
+            list-style: none;
+            padding: 0;
+            margin: 1em 0 1.5em;
+        }
+        .rule-list li {
+            padding: 10px 0 10px 28px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.72);
+            font-size: 1rem;
+            position: relative;
+        }
+        .rule-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: rgba(255,255,255,0.35);
+        }
+        .rule-list li:last-child { border-bottom: none; }
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.07);
+            padding: 40px 24px;
+            text-align: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.82rem;
+            letter-spacing: 0.3px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="../">Home</a>
+  <a href="../#projects">Projects</a>
+  <a href="../#music">Music</a>
+  <a href="../#filmmaking">Films</a>
+</nav>
+
+<header>
+    <p class="tag">Personal Project · Embedded Systems / Robotics</p>
+    <h1>Bartender Robot — ESP32 WiFi-Controlled Drink Dispenser</h1>
+    <p class="subtitle">Building a self-contained cocktail machine controlled entirely over WiFi from any phone or laptop</p>
+    <div class="meta">2024 &nbsp;·&nbsp; ESP32 / C++</div>
+</header>
+
+<div class="content">
+
+    <h2>The Idea</h2>
+
+    <p>
+        The goal was simple: build a robot that can pour drinks on command, with no app to install and no pairing ritual. Walk up, connect to its WiFi network, open a browser, and order a drink. That is the whole experience.
+    </p>
+
+    <p>
+        The hardware side — pumps, tubing, motor drivers — is straightforward enough. The interesting problem is the software: how do you give a microcontroller a usable web interface without depending on an external network that may or may not be available at a party?
+    </p>
+
+    <div class="callout">
+        The robot hosts its own WiFi access point. No router, no internet connection, no app — just connect and order.
+    </div>
+
+    <h2>Running Its Own Network</h2>
+
+    <p>
+        Rather than connecting to an existing WiFi network, the ESP32 broadcasts its own access point. Any device in range can join it directly. This keeps the robot fully self-contained — it works anywhere, with no setup required from the user beyond connecting to the network.
+    </p>
+
+    <p>
+        Once connected, a web server running on the microcontroller serves a control interface straight to the browser. The entire UI is embedded in the firmware, so there are no files to manage or external dependencies to worry about.
+    </p>
+
+    <h2>Key Features</h2>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <div class="icon">📡</div>
+            <h4>Self-Hosted Access Point</h4>
+            <p>The ESP32 creates its own WiFi network. No router needed — guests connect directly to the robot from any WiFi-capable device.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">🌐</div>
+            <h4>Embedded Web Interface</h4>
+            <p>The full control UI is served by an asynchronous HTTP server running on the chip itself. Open a browser, get the interface — instantly.</p>
+        </div>
+    </div>
+
+    <h2>The Technical Stack</h2>
+
+    <p>
+        The firmware is written in C++ on the ESP32 platform. An asynchronous web server library handles incoming HTTP requests without blocking the main loop, which keeps the robot responsive even while it is mid-pour. The web interface itself is plain HTML and JavaScript, compiled directly into the firmware binary.
+    </p>
+
+    <p>
+        WiFi credentials and other runtime configuration are saved to the chip's SPIFFS filesystem — a small flash-based storage partition that survives power cycles. This means the robot can be reconfigured once and remember its settings indefinitely.
+    </p>
+
+    <h2>What's Next</h2>
+
+    <p>
+        The current build handles the networking and control layer. The next step is expanding the drink menu, adding flow sensors to measure pour accuracy, and possibly adding a display so guests can see what is being made. There is also room for a proper order queue — so multiple people can submit requests and the robot works through them in order.
+    </p>
+
+
+</div>
+
+<footer>
+    Bartender Robot &nbsp;·&nbsp; Personal Build Project
+</footer>
+
+</body>
+</html>
