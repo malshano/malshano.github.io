@@ -104,7 +104,7 @@ nav a:hover {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 60px 0;
+    padding: 60px 0 200px;
 }
 
 .projects-bg-video {
@@ -546,10 +546,19 @@ nav a:hover {
 
 
 
-/* ---------------- CARD STACK SCROLL EFFECT ---------------- */
+/* ---------------- CARD STACK SCROLL EFFECT (desktop only) ---------------- */
 /* Projects pins while DJ slides over it.
    DJ pins while Filmmaking + Contact slides over it.
-   Filmmaking is not sticky so Contact follows naturally. */
-#projects   { position: sticky; top: 0; z-index: 10; }
-#music      { position: sticky; top: 0; z-index: 20; }
-#filmmaking { position: relative; z-index: 30; min-height: 100vh; }
+   Filmmaking is not sticky so Contact follows naturally.
+   Disabled on mobile so all project cards are scrollable. */
+@media (min-width: 768px) {
+    #projects   { position: sticky; top: 0; z-index: 10; height: 100vh; padding: 20px 0 80px; justify-content: flex-start; }
+    #music      { position: sticky; top: 0; z-index: 20; }
+    #filmmaking { position: relative; z-index: 30; min-height: 100vh; }
+
+    /* All 5 cards in one row so content fits within the viewport,
+       leaving the 80px bottom padding visible */
+    .project-card { flex: 1 1 17%; max-width: none; }
+    #projects .section-title { margin: 10px 0 20px; }
+    #projects .project-grid { margin: 0 auto; }
+}
