@@ -553,7 +553,7 @@ nav a:hover {
    Disabled on mobile so all project cards are scrollable. */
 @media (min-width: 768px) {
     #projects   { position: sticky; top: 0; z-index: 10; height: 100vh; padding: 20px 0 80px; justify-content: flex-start; }
-    #music      { position: sticky; top: 0; z-index: 20; }
+    #music      { position: sticky; top: 0; z-index: 20; overflow: visible; }
     #filmmaking { position: relative; z-index: 30; min-height: 100vh; }
 
     /* All 5 cards in one row so content fits within the viewport,
