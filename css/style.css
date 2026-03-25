@@ -100,17 +100,13 @@ nav a:hover {
     padding: 60px 0;
 }
 
-/* Blurred background via pseudo-element so content stays sharp */
-#projects::before {
-    content: "";
+.projects-bg-video {
     position: absolute;
     inset: 0;
-    background-image: url('../assets/images/projectsbackground.jpg');
-    background-size: cover;
-    background-position: center;
-    filter: blur(1px);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     filter: brightness(0.3);
-    transform: scale(1.05); /* prevents blur from showing white edges */
     z-index: 0;
 }
 
