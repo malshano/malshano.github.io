@@ -1,5 +1,6 @@
 /* ---------------- FONT ---------------- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap');
 
 body {
     font-family: 'Inter', sans-serif;
@@ -84,6 +85,302 @@ nav a {
 nav a:hover {
     opacity: 0.7;
     z-index: 3;
+}
+
+/* ---------------- STICKMAN ANIMATION ---------------- */
+#falling-a {
+    display: inline-block;
+}
+
+/*
+ * Fall uses transform-origin: 0 0 (top-left corner = the first screw that stays put).
+ * Swing phase 0-61%: pendulum rotation with rising amplitude.
+ * Fall phase 61-100%: translate(0, Y) rotate(28deg) — proven straight-down:
+ *   the element centre moves only in Y (constant X = 1.79px offset from original).
+ */
+.letter-fallen {
+    transform-origin: 0 0;
+    animation: a-fall 1.3s linear forwards;
+}
+.letter-risen {
+    transform-origin: 0 0;
+    animation: a-rise 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes a-fall {
+    /*
+     * ONE slow gravity swing — letter pivots around the remaining top-left screw.
+     * Starts barely moving (gravity takes hold), arcs to ~35°, brief strain-return,
+     * second screw snaps, falls straight down at ~27° tilt.
+     */
+    0%   { transform: rotate(0deg); }
+    8%   { transform: rotate(4deg); }   /* very slow start — gravity pulling */
+    40%  { transform: rotate(35deg); }  /* peak of single swing */
+    53%  { transform: rotate(23deg); }  /* brief back-strain on last screw */
+    85%  { transform: rotate(27deg); }  /* screw snaps */
+    100% { transform: translate(0, var(--fall-y, 70px)) rotate(27deg); }
+}
+@keyframes a-rise {
+    from { transform: translate(0, var(--fall-y, 70px)) rotate(27deg); }
+    to   { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* --- Stickman wrapper --- */
+#stickman-wrap {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+#stickman-wrap.running-in {
+    opacity: 1;
+    animation: sm-run-in 0.9s ease-out forwards;
+}
+#stickman-wrap.bending-down,
+#stickman-wrap.standing-up,
+#stickman-wrap.fixing {
+    opacity: 1;
+    transform: translateX(0);
+}
+#stickman-wrap.running-out {
+    opacity: 1;
+    animation: sm-run-out 0.7s ease-in forwards;
+}
+@keyframes sm-run-in {
+    from { transform: translateX(var(--sm-offscreen, 500px)); }
+    to   { transform: translateX(0); }
+}
+@keyframes sm-run-out {
+    from { transform: translateX(0); }
+    to   { transform: translateX(var(--sm-offscreen, 500px)); }
+}
+
+/*
+ * Body bob + lean: lean LEFT (negative angle) when running left (running-in),
+ * lean RIGHT (positive) when running right (running-out).
+ * This gives the side-view running silhouette.
+ */
+#stickman-wrap.running-in #stickman-svg {
+    animation: sm-bob-in 0.16s ease-in-out infinite alternate;
+}
+#stickman-wrap.running-out #stickman-svg {
+    animation: sm-bob-out 0.16s ease-in-out infinite alternate;
+}
+@keyframes sm-bob-in {
+    from { transform: translateY(0px)  rotate(-15deg); }
+    to   { transform: translateY(-3px) rotate(-17deg); }
+}
+@keyframes sm-bob-out {
+    from { transform: translateY(0px)  rotate(15deg); }
+    to   { transform: translateY(-3px) rotate(17deg); }
+}
+
+/* Bend at hips: only the upper body rotates forward, legs stay put */
+#stickman-wrap.bending-down #sm-upper {
+    animation: sm-upper-bend 0.4s ease-in-out forwards;
+}
+@keyframes sm-upper-bend {
+    0%   { transform: rotate(0deg); }
+    65%  { transform: rotate(58deg); }
+    100% { transform: rotate(52deg); }
+}
+
+/* Straighten back up while letter rises */
+#stickman-wrap.standing-up #sm-upper {
+    animation: sm-upper-stand 0.45s ease-out forwards;
+}
+@keyframes sm-upper-stand {
+    from { transform: rotate(52deg); }
+    to   { transform: rotate(0deg); }
+}
+
+/* Subtle working sway during the 3-second fix — stops it looking frozen */
+#stickman-wrap.fixing #stickman-svg {
+    animation: sm-fix-sway 1.4s ease-in-out infinite alternate;
+}
+@keyframes sm-fix-sway {
+    from { transform: rotate(-4deg); }
+    to   { transform: rotate(4deg); }
+}
+
+/* ── UPPER BODY GROUP: rotates at hips for bending/standing ──
+   Hip is at SVG coordinate (20,28) in a 44×58 viewport.
+   view-box makes % origins relative to the SVG viewport. */
+#sm-upper {
+    transform-box: view-box;
+    transform-origin: 45.5% 48.3%; /* = (20,28) = hip joint */
+}
+
+/* ── JOINTED LIMB PIVOT ORIGINS ──
+   fill-box makes % origins relative to each element's own bounding box.
+   Bounding boxes include the full subtree, so we must account for child geometry.
+
+   sm-luarm subtree bbox: x -12→0 (w=12), y -3→4 (h=7).  Shoulder (0,0) → 100%, 3/7=43%
+   sm-rfarm subtree bbox: x -4→6  (w=10), y 0→9.5 (h=9.5). Elbow  (0,0) → 4/10=40%, 0%
+   All others: joint at a corner of bbox → simple 0%/100% values work. */
+#sm-luarm, #sm-lfarm,
+#sm-ruarm, #sm-rfarm,
+#sm-lthigh, #sm-lshin,
+#sm-rthigh, #sm-rshin { transform-box: fill-box; }
+
+#sm-luarm  { transform-origin: 100%  43%; } /* shoulder: bbox corner (0,0) at 100%,43% */
+#sm-lfarm  { transform-origin: 100%   0%; } /* elbow: bbox top-right corner */
+#sm-ruarm  { transform-origin:   0%   0%; } /* shoulder: bbox top-left corner */
+#sm-rfarm  { transform-origin:  40%   0%; } /* elbow: (0,0) at 40% due to wrench in bbox */
+#sm-lthigh { transform-origin: 100%   0%; } /* hip: bbox top-right corner */
+#sm-lshin  { transform-origin: 100%   0%; } /* knee: bbox top-right corner */
+#sm-rthigh { transform-origin:   0%   0%; } /* hip: bbox top-left corner */
+#sm-rshin  { transform-origin:   0%   0%; } /* knee: bbox top-left corner */
+
+/* ── RUNNING: thighs alternate forward↔back, shins bend at knee ──
+   Left & right are opposite phase: left starts forward, right starts back. */
+#stickman-wrap.running-in  #sm-lthigh,
+#stickman-wrap.running-out #sm-lthigh { animation: lthigh-run 0.22s ease-in-out infinite alternate; }
+@keyframes lthigh-run { from { transform: rotate(-26deg); } to { transform: rotate(22deg); } }
+
+#stickman-wrap.running-in  #sm-lshin,
+#stickman-wrap.running-out #sm-lshin  { animation: lshin-run  0.22s ease-in-out infinite alternate; }
+@keyframes lshin-run  { from { transform: rotate(5deg);  } to { transform: rotate(52deg); } }
+
+#stickman-wrap.running-in  #sm-rthigh,
+#stickman-wrap.running-out #sm-rthigh { animation: rthigh-run 0.22s ease-in-out infinite alternate; }
+@keyframes rthigh-run { from { transform: rotate(22deg);  } to { transform: rotate(-26deg); } }
+
+#stickman-wrap.running-in  #sm-rshin,
+#stickman-wrap.running-out #sm-rshin  { animation: rshin-run  0.22s ease-in-out infinite alternate; }
+@keyframes rshin-run  { from { transform: rotate(52deg); } to { transform: rotate(5deg); } }
+
+/* Running arm animation is driven by JS (stickman.js) via SVG transform attribute
+   for reliable pivot around the shoulder/elbow joint (no transform-box issues). */
+
+/* ── BENDING DOWN: slight squat + arms reach forward-down ── */
+#stickman-wrap.bending-down #sm-lthigh,
+#stickman-wrap.bending-down #sm-rthigh { animation: thigh-bend 0.4s ease-in-out forwards; }
+@keyframes thigh-bend { to { transform: rotate(22deg); } }
+
+#stickman-wrap.bending-down #sm-lshin,
+#stickman-wrap.bending-down #sm-rshin  { animation: shin-bend  0.4s ease-in-out forwards; }
+@keyframes shin-bend  { to { transform: rotate(38deg); } }
+
+/* Right arm reaches down to grab; left arm swings back for balance.
+   Angles are relative to the already-52°-leaned sm-upper group. */
+#stickman-wrap.bending-down #sm-ruarm { animation: ruarm-bend 0.38s ease-in-out forwards; }
+@keyframes ruarm-bend { to { transform: rotate(35deg); } }
+
+#stickman-wrap.bending-down #sm-rfarm { animation: rfarm-bend 0.38s ease-in-out forwards; }
+@keyframes rfarm-bend { to { transform: rotate(42deg); } }
+
+#stickman-wrap.bending-down #sm-luarm { animation: luarm-bend 0.38s ease-in-out forwards; }
+@keyframes luarm-bend { to { transform: rotate(-20deg); } }
+
+#stickman-wrap.bending-down #sm-lfarm { animation: lfarm-bend 0.38s ease-in-out forwards; }
+@keyframes lfarm-bend { to { transform: rotate(5deg); } }
+
+/* ── STANDING UP ── */
+#stickman-wrap.standing-up #sm-lthigh,
+#stickman-wrap.standing-up #sm-rthigh { animation: thigh-stand 0.35s ease-out forwards; }
+@keyframes thigh-stand { from { transform: rotate(22deg); } to { transform: rotate(0deg); } }
+
+#stickman-wrap.standing-up #sm-lshin,
+#stickman-wrap.standing-up #sm-rshin  { animation: shin-stand  0.35s ease-out forwards; }
+@keyframes shin-stand  { from { transform: rotate(38deg); } to { transform: rotate(0deg); } }
+
+#stickman-wrap.standing-up #sm-ruarm { animation: ruarm-stand 0.35s ease-out forwards; }
+@keyframes ruarm-stand { from { transform: rotate(35deg); } to { transform: rotate(0deg); } }
+
+#stickman-wrap.standing-up #sm-rfarm { animation: rfarm-stand 0.35s ease-out forwards; }
+@keyframes rfarm-stand { from { transform: rotate(42deg); } to { transform: rotate(0deg); } }
+
+#stickman-wrap.standing-up #sm-luarm { animation: luarm-stand 0.35s ease-out forwards; }
+@keyframes luarm-stand { from { transform: rotate(-20deg); } to { transform: rotate(0deg); } }
+
+#stickman-wrap.standing-up #sm-lfarm { animation: lfarm-stand 0.35s ease-out forwards; }
+@keyframes lfarm-stand { from { transform: rotate(5deg); } to { transform: rotate(0deg); } }
+
+/* ── FIXING: right upper arm raises, forearm extends with wrench ── */
+#stickman-wrap.fixing #sm-ruarm { animation: ruarm-fix 0.3s ease-out forwards; }
+@keyframes ruarm-fix { to { transform: rotate(-65deg); } }
+
+#stickman-wrap.fixing #sm-rfarm { animation: rfarm-fix 0.3s 0.1s ease-out forwards; }
+@keyframes rfarm-fix { to { transform: rotate(-15deg); } }
+
+#sm-wrench { transform-box: fill-box; transform-origin: 0% 50%; }
+#stickman-wrap.fixing #sm-wrench {
+    animation: wrench-appear 0.2s ease-out forwards,
+               wrench-turn   0.4s 0.2s ease-in-out infinite alternate;
+}
+@keyframes wrench-appear { from { opacity: 0; } to { opacity: 1; } }
+@keyframes wrench-turn   { from { transform: rotate(-10deg); } to { transform: rotate(35deg); } }
+
+/* ---------------- HOME / ME SECTION ---------------- */
+#home {
+    transform-origin: center center;
+    transition: transform 0.1s linear;
+    will-change: transform;
+}
+
+/* ---------------- WELCOME TEXT ---------------- */
+.welcome-text {
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 28px;
+    line-height: 1.7;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 3;
+    border: 0.01px solid rgb(27, 27, 27);
+    padding: 30px 40px;
+    border-radius: 4px;
+}
+
+.neon-flicker {
+    color: rgba(255,255,255,0.1);
+    animation: neon-on 2s ease-out forwards, neon-flicker 8s 2s infinite;
+}
+
+@keyframes neon-on {
+    0% {
+        color: rgba(255,255,255,0.05);
+        text-shadow: none;
+    }
+    60% {
+        color: rgba(255,255,255,0.3);
+        text-shadow: none;
+    }
+    80% {
+        color: rgba(255,255,255,0.8);
+        text-shadow:
+            0 0 5px #fff,
+            0 0 15px #ff69b4,
+            0 0 30px #ff69b4;
+    }
+    100% {
+        color: #fff;
+        text-shadow:
+            0 0 5px #fff,
+            0 0 10px #fff,
+            0 0 20px #ff69b4,
+            0 0 40px #ff69b4,
+            0 0 80px #ff69b4;
+    }
+}
+
+@keyframes neon-flicker {
+    0%,  90%,  92%,  100% {
+        color: #fff;
+        text-shadow:
+            0 0 5px #fff,
+            0 0 10px #fff,
+            0 0 20px #ff69b4,
+            0 0 40px #ff69b4,
+            0 0 80px #ff69b4;
+    }
+    91% {
+        color: rgba(255,255,255,0.6);
+        text-shadow:
+            0 0 5px #fff,
+            0 0 10px #ff69b4;
+    }
 }
 
 /* ---------------- SECTION TITLES ---------------- */

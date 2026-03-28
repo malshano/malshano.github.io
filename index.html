@@ -10,7 +10,74 @@
 
     
 <header>
-    <h1>Malshan Perera</h1>
+    <h1>Malshan Perer<span id="falling-a">a</span></h1>
+    <div id="stickman-wrap">
+        <svg id="stickman-svg" viewBox="0 0 44 58" width="40" height="53" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Upper body: rotates at hips for bend/stand -->
+            <g id="sm-upper">
+            <!-- Head -->
+            <circle cx="20" cy="5" r="4.5" stroke="white" stroke-width="1.5"/>
+            <!-- Body -->
+            <line x1="20" y1="9.5" x2="20" y2="28" stroke="white" stroke-width="1.5"/>
+
+            <!-- LEFT ARM: upper arm → elbow joint → forearm -->
+            <g id="sm-lshoulder" transform="translate(20,16)">
+                <g id="sm-luarm">
+                    <line x1="0" y1="0" x2="-7" y2="-3" stroke="white" stroke-width="1.5"/>
+                    <g transform="translate(-7,-3)">
+                        <circle cx="0" cy="0" r="1.0" fill="white"/>
+                        <g id="sm-lfarm">
+                            <line x1="0" y1="0" x2="-5" y2="7" stroke="white" stroke-width="1.5"/>
+                        </g>
+                    </g>
+                </g>
+            </g>
+
+            <!-- RIGHT ARM: upper arm → elbow joint → forearm (+ wrench) -->
+            <g id="sm-rshoulder" transform="translate(20,16)">
+                <g id="sm-ruarm">
+                    <line x1="0" y1="0" x2="7" y2="7" stroke="white" stroke-width="1.5"/>
+                    <g transform="translate(7,7)">
+                        <circle cx="0" cy="0" r="1.0" fill="white"/>
+                        <g id="sm-rfarm">
+                            <line x1="0" y1="0" x2="-3" y2="7" stroke="white" stroke-width="1.5"/>
+                            <g id="sm-wrench" transform="translate(-3,7)" opacity="0">
+                                <line x1="0" y1="0" x2="9" y2="0" stroke="white" stroke-width="1.5"/>
+                                <circle cx="1.5" cy="0" r="2.5" stroke="white" stroke-width="1.2"/>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+            </g><!-- /sm-upper -->
+
+            <!-- LEFT LEG: thigh → knee joint → shin -->
+            <g transform="translate(20,28)">
+                <g id="sm-lthigh">
+                    <line x1="0" y1="0" x2="-4" y2="11" stroke="white" stroke-width="1.5"/>
+                    <g transform="translate(-4,11)">
+                        <circle cx="0" cy="0" r="1.0" fill="white"/>
+                        <g id="sm-lshin">
+                            <line x1="0" y1="0" x2="-3" y2="12" stroke="white" stroke-width="1.5"/>
+                        </g>
+                    </g>
+                </g>
+            </g>
+
+            <!-- RIGHT LEG: thigh → knee joint → shin -->
+            <g transform="translate(20,28)">
+                <g id="sm-rthigh">
+                    <line x1="0" y1="0" x2="3" y2="11" stroke="white" stroke-width="1.5"/>
+                    <g transform="translate(3,11)">
+                        <circle cx="0" cy="0" r="1.0" fill="white"/>
+                        <g id="sm-rshin">
+                            <line x1="0" y1="0" x2="2" y2="12" stroke="white" stroke-width="1.5"/>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </svg>
+    </div>
     <p class="header-subtitle">
         <span class="role-tag">Hardware Engineer</span>
         <span class="role-tag">Electronics Hobbyist</span>
@@ -31,11 +98,15 @@
 </nav>
 
 <section id="home">
-    <h2 class="section-title">Welcome</h2>
-    <p>Hi! I am Malshan, a hardware engineer and hobbyist. This is my portfolio showcasing my projects and music gigs.</p>
+    <h2 class="section-title">Me</h2>
+    <div class="welcome-text">
+        <p>Hi and welcome :). I am Malshan. You have found a little part of my internet. Curiosity drives me. I like to build things and challenge myself to push my boundaries. I have worked as a Engineer, a DJ, a Filmmaker, Housekeeper, Drone operator, Pyrotechnician, Coding consultant, Entrepreneur and Assistant Lecturer.</p>
+        <p>I dont have a favorite place, I have my favorite people, and when I am with those people, that place become my favorite place.</p>
+        <p class="neon-flicker">With you this is home &lt;3</p>
+    </div>
 </section>
 <section id="about">
-    <h2 class="section-title">About / Skills</h2>
+    <h2 class="section-title">Currently</h2>
     <p>Hardware Engineer at ScoutDI specializing in drone systems and hardware design.</p>
 </section>
 
@@ -176,6 +247,7 @@
 </footer>
 <script src="js/scroll-anim.js"></script>
 <script src="js/header-roles.js"></script>
+<script src="js/stickman.js"></script>
 
 </body>
 </html>
