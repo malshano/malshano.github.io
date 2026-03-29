@@ -15,17 +15,18 @@
         var vid = document.getElementById(videoId);
         if (!vid) return null;
 
+        // Centre the video on its anchor point via CSS — no need to read offsetWidth/Height
+        vid.style.transform = 'translate(-50%, -50%)';
+
         function position() {
             var nameRect   = h1Name.getBoundingClientRect();
             var headerRect = header.getBoundingClientRect();
-            var jH  = vid.offsetHeight || 110;
-            var jW  = vid.offsetWidth  || jH;
-            var cx  = nameRect.left - headerRect.left + nameRect.width  / 2;
-            var cy  = nameRect.top  - headerRect.top  + nameRect.height / 2;
+            var cx       = nameRect.left - headerRect.left + nameRect.width  / 2;
+            var cy       = nameRect.top  - headerRect.top  + nameRect.height / 2;
             var fontSize = h1El ? parseFloat(getComputedStyle(h1El).fontSize) : 64;
             var scale    = fontSize / 64;
-            vid.style.left = Math.round(cx - jW / 2 + offsetX * scale) + 'px';
-            vid.style.top  = Math.round(cy - jH / 2 + offsetY * scale) + 'px';
+            vid.style.left = Math.round(cx + offsetX * scale) + 'px';
+            vid.style.top  = Math.round(cy + offsetY * scale) + 'px';
         }
 
         function play() {
@@ -48,7 +49,7 @@
     // offsetX: negative = left of name centre,  positive = right
     // offsetY: negative = above name centre,    positive = below
     var playJetpack = makeSequence('jetpack-video',  -10,  -40);
-    var playSkijump = makeSequence('skijump-video', -175,  -10);
+    var playSkijump = makeSequence('skijump-video', -230,  -50);
     var playSurfing = makeSequence('surfing-video',   150,  -60);
     // ───────────────────────────────────────────────────────────────────────
 
