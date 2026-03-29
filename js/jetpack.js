@@ -52,7 +52,7 @@
     // offsetY: negative = above name centre,    positive = below
     var playJetpack = makeSequence('jetpack-video',  -10,  -40);
     var playSkijump = makeSequence('skijump-video', -230,  -50);
-    var playSurfing = makeSequence('surfing-video',   150,  -70);
+    var playSurfing = makeSequence('surfing-video',   150,  -70, 8000);
     // ───────────────────────────────────────────────────────────────────────
 
     if (playJetpack) {
