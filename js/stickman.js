@@ -90,7 +90,7 @@
         // All subsequent steps are relative to RUN_IN_DELAY — change one number, everything follows.
         var arrive    = RUN_IN_DELAY + RUN_DURATION;
         var bendStart = arrive + 50;
-        var standStart = bendStart + 400;
+        var standStart = bendStart + 250;
         var fixStart  = standStart + 450;
         var runOut    = fixStart + 3000;
         var cleanup   = runOut + 800;
@@ -110,7 +110,7 @@
             wrap.className = 'bending-down';
         }, bendStart);
 
-        // 4 — straighten up; letter rises back simultaneously
+        // 4 — letter rises and stickman stands up together
         setTimeout(function () {
             fallingA.style.transform       = 'translate(0px, ' + fallY + 'px) rotate(27deg)';
             fallingA.style.transformOrigin = '0 0';
