@@ -50,7 +50,14 @@ document.querySelectorAll('nav a[href^="#"]').forEach(link => {
         if (!target) return;
         e.preventDefault();
         const naturalTop = sectionNaturalTops[id] ?? target.offsetTop;
-        navScrollTo(Math.max(0, naturalTop - nav.offsetHeight));
+        let targetY;
+        if (id === 'about') {
+            // Centre the section vertically in the viewport
+            targetY = naturalTop - (window.innerHeight / 2) + (target.offsetHeight / 2);
+        } else {
+            targetY = naturalTop - nav.offsetHeight;
+        }
+        navScrollTo(Math.max(0, targetY));
     });
 });
 
