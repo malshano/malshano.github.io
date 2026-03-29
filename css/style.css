@@ -118,7 +118,7 @@ nav a:hover {
     opacity: 0;
     z-index: 0;
     transition: opacity 0.7s ease;
-    height: clamp(60px, 8.5vw, 110px);
+    height: clamp(62px, calc(5vw * 1.72), 110px);
     width: auto;
     mix-blend-mode: screen;
     -webkit-mask-image: radial-gradient(ellipse 55% 55% at 50% 50%, black 20%, transparent 80%);
@@ -175,7 +175,7 @@ nav a:hover {
     z-index: 10;
 }
 #stickman-svg {
-    width: clamp(40px, 5.3vw, 68px);
+    width: clamp(38px, calc(5vw * 1.0625), 68px);
     height: auto;
 }
 #stickman-wrap.running-in {
