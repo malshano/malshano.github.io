@@ -11,7 +11,8 @@
 
     // offsetX/offsetY in pixels, tuned at max desktop font size (64 px).
     // They scale down automatically on smaller screens.
-    function makeSequence(videoId, offsetX, offsetY) {
+    // duration: optional ms override for how long this video stays visible.
+    function makeSequence(videoId, offsetX, offsetY, duration) {
         var vid = document.getElementById(videoId);
         if (!vid) return null;
 
@@ -30,6 +31,7 @@
         }
 
         function play() {
+            var showMs = duration || SHOW_DURATION;
             position();
             vid.currentTime = 0;
             vid.play().catch(function () {});
@@ -37,7 +39,7 @@
             setTimeout(function () {
                 vid.style.opacity = '0';
                 setTimeout(function () { vid.pause(); }, FADE_MS);
-            }, SHOW_DURATION - FADE_MS);
+            }, showMs - FADE_MS);
         }
 
         window.addEventListener('resize', position, { passive: true });
@@ -50,7 +52,7 @@
     // offsetY: negative = above name centre,    positive = below
     var playJetpack = makeSequence('jetpack-video',  -10,  -40);
     var playSkijump = makeSequence('skijump-video', -230,  -50);
-    var playSurfing = makeSequence('surfing-video',   150,  -60);
+    var playSurfing = makeSequence('surfing-video',   150,  -70);
     // ───────────────────────────────────────────────────────────────────────
 
     if (playJetpack) {
