@@ -72,8 +72,8 @@
          * Stickman runs just above the subtitle — feet 3 px above its top border.
          * Horizontally centred on the falling "a" (which drops straight down).
          */
-        var smW   = 68;
-        var smH   = 90;
+        var smW   = wrap.offsetWidth  || 68;
+        var smH   = wrap.offsetHeight || 90;
         var smLeft = Math.round(aRect.left - headerRect.left + aRect.width / 2 - smW / 2);
         var smTop  = Math.round(subRect.top - headerRect.top - smH + 8);
 

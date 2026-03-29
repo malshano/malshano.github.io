@@ -7,8 +7,8 @@
     var FADE_MS       = 700;  // must match CSS transition duration
     var REPEAT_EVERY  = 22000; // ms between each video's repeat cycle
 
-    // offsetX: px from centre of name text (negative = left, positive = right)
-    // offsetY: px from centre of name text (negative = up,   positive = down)
+    // offsetX: fraction of name width from centre (negative = left, positive = right)
+    // offsetY: fraction of name width from centre (negative = up,   positive = down)
     function makeSequence(videoId, offsetX, offsetY) {
         var vid = document.getElementById(videoId);
         if (!vid) return null;
@@ -20,8 +20,9 @@
             var jW  = vid.offsetWidth  || jH;
             var cx  = nameRect.left - headerRect.left + nameRect.width  / 2;
             var cy  = nameRect.top  - headerRect.top  + nameRect.height / 2;
-            vid.style.left = Math.round(cx - jW / 2 + offsetX) + 'px';
-            vid.style.top  = Math.round(cy - jH / 2 + offsetY) + 'px';
+            var scale = nameRect.width;
+            vid.style.left = Math.round(cx - jW / 2 + offsetX * scale) + 'px';
+            vid.style.top  = Math.round(cy - jH / 2 + offsetY * scale) + 'px';
         }
 
         function play() {
@@ -40,11 +41,10 @@
     }
 
     // ── Adjust placement here ──────────────────────────────────────────────
-    // offsetX: negative moves left of centre, positive moves right of centre
-    // offsetY: negative moves above centre,   positive moves below centre
-    var playJetpack = makeSequence('jetpack-video', -10,  -40);
-    var playSkijump = makeSequence('skijump-video', -155, -20);
-    var playSurfing = makeSequence('surfing-video',   0,    0);
+    // offsetX/offsetY: fraction of name width (−0.5 = left edge, +0.5 = right edge)
+    var playJetpack = makeSequence('jetpack-video', -0.03, -0.11);
+    var playSkijump = makeSequence('skijump-video', -0.44, -0.06);
+    var playSurfing = makeSequence('surfing-video',  0.43, -0.17);
     // ───────────────────────────────────────────────────────────────────────
 
     if (playJetpack) {
@@ -65,6 +65,6 @@
         setTimeout(function () {
             playSurfing();
             setInterval(playSurfing, REPEAT_EVERY);
-        }, 17000);
+        }, 10);
     }
 })();
