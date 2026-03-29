@@ -124,6 +124,11 @@ nav a:hover {
     -webkit-mask-image: radial-gradient(ellipse 55% 55% at 50% 50%, black 20%, transparent 80%);
     mask-image: radial-gradient(ellipse 55% 55% at 50% 50%, black 20%, transparent 80%);
 }
+#surfing-video {
+    filter: contrast(1.4) brightness(1.2);
+    -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 50%, black 25%, transparent 85%);
+    mask-image: radial-gradient(ellipse 70% 65% at 50% 50%, black 25%, transparent 85%);
+}
 @media (max-width: 767px) {
     #jetpack-video  { display: none; }
     #skijump-video  { display: none; }

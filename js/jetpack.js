@@ -47,12 +47,12 @@
     }
 
     // ── Adjust placement here ──────────────────────────────────────────────
-    // offsetX/offsetY: pixels at full desktop (64px font). Scale with screen.
+    // offsetX/offsetY: pixels at full desktop (64px font). Scale with screen.  time to play
     // offsetX: negative = left of name centre,  positive = right
     // offsetY: negative = above name centre,    positive = below
     var playJetpack = makeSequence('jetpack-video',  -10,  -40);
     var playSkijump = makeSequence('skijump-video', -230,  -50);
-    var playSurfing = makeSequence('surfing-video',   150,  -70, 8000);
+    var playSurfing = makeSequence('surfing-video',   150,  -60, 6000);
     // ───────────────────────────────────────────────────────────────────────
 
     if (playJetpack) {
