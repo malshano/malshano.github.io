@@ -2,6 +2,58 @@
 const nav = document.querySelector('nav');
 const navOffsetTop = nav.offsetTop;
 
+// ── NAV ANCHOR FIX FOR STICKY SECTIONS ────────────────────────────────────
+// Sticky elements report getBoundingClientRect().top === 0 while stuck, so
+// the browser skips scrolling to them ("already in view"). Also, offsetTop
+// on sticky sections can vary depending on browser compositing state.
+// Fix: snapshot natural section positions at load time (before any scrolling),
+// then use a rAF-driven easing scroll that cannot be interrupted by scroll events.
+
+// Snapshot natural positions before any scrolling/sticky transforms apply
+const sectionNaturalTops = {};
+document.querySelectorAll('section[id]').forEach(s => {
+    sectionNaturalTops[s.id] = s.offsetTop;
+});
+
+let navRafId = null;
+function navScrollTo(targetY) {
+    // Cancel any in-progress nav scroll
+    if (navRafId) { cancelAnimationFrame(navRafId); navRafId = null; }
+    // Snap to current position to cancel any browser momentum/smooth-scroll
+    window.scrollTo(0, window.scrollY);
+    const start    = window.scrollY;
+    const distance = targetY - start;
+    if (Math.abs(distance) < 1) return;
+    const duration = Math.min(800, Math.max(300, Math.abs(distance) * 0.3));
+    let   startTime = null;
+    function step(ts) {
+        if (!startTime) startTime = ts;
+        const p = Math.min((ts - startTime) / duration, 1);
+        // ease-in-out cubic
+        const ease = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+        window.scrollTo(0, start + distance * ease);
+        if (p < 1) {
+            navRafId = requestAnimationFrame(step);
+        } else {
+            navRafId = null;
+            // Snap exactly to target in case of floating-point drift
+            window.scrollTo(0, targetY);
+        }
+    }
+    navRafId = requestAnimationFrame(step);
+}
+
+document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+    link.addEventListener('click', function (e) {
+        const id = this.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        const naturalTop = sectionNaturalTops[id] ?? target.offsetTop;
+        navScrollTo(Math.max(0, naturalTop - nav.offsetHeight));
+    });
+});
+
 window.addEventListener('scroll', () => {
     nav.classList.toggle('nav-stuck', window.scrollY > navOffsetTop);
 }, { passive: true });
