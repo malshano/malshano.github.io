@@ -1,35 +1,46 @@
 /* ---------------- FONT ---------------- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:wght@300;400;500;600;700&display=swap');
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Funnel Sans', sans-serif;
     margin: 0;
     background: #000;
-    color: white;
+    color: #f5f5f7;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     z-index: 3;
+}
+
+/* ---------------- HEADINGS ---------------- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.022em;
+    line-height: 1.1;
 }
 
 /* ---------------- HEADER ---------------- */
 header {
     position: relative;
     text-align: center;
-    padding: 40px 20px;
+    padding: 80px 20px 50px;
     z-index: 3;
 }
 
 header h1 {
     position: relative;
-    z-index: 1;
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
     z-index: 3;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #f5f5f7;
 }
 
 header p {
-    font-size: 16px;
-    opacity: 0.8;
+    font-size: 17px;
+    color: #a1a1a6;
     z-index: 3;
 }
 
@@ -44,12 +55,13 @@ header p {
 .role-tag {
     opacity: 0;
     transform: translateY(8px);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    padding: 4px 12px;
+    letter-spacing: 0.01em;
+    color: #a1a1a6;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 980px;
+    padding: 5px 14px;
     animation: roleAppear 0.5s ease forwards;
 }
 
@@ -83,14 +95,17 @@ nav.nav-stuck {
 }
 
 nav a {
-    color: white;
+    color: #f5f5f7;
     text-decoration: none;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: color 0.2s ease;
     z-index: 3;
 }
 
 nav a:hover {
-    opacity: 0.7;
+    color: #a1a1a6;
     z-index: 3;
 }
 
@@ -413,17 +428,40 @@ nav a:hover {
 
 /* ---------------- SECTION TITLES ---------------- */
 .section-title {
-    font-size: 36px;
+    font-size: clamp(28px, 4vw, 48px);
     text-align: center;
-    margin: 50px 0;
-    font-weight: 600;
+    margin: 40px 0 30px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: #f5f5f7;
     position: relative;
     z-index: 3;
 }
 
-/* ---------------- ABOUT SECTION ---------------- */
-#about p {
+/* ---------------- ABOUT SECTION — Apple-inspired ---------------- */
+#about {
+    background: #f5f5f7;
+    padding: 100px 20px;
     text-align: center;
+}
+#about .section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6e6e73;
+    margin: 0 0 18px;
+}
+#about p {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(24px, 3.5vw, 40px);
+    font-weight: 600;
+    color: #1d1d1f;
+    max-width: 720px;
+    margin: 0 auto;
+    line-height: 1.25;
+    letter-spacing: -0.022em;
 }
 
 /* ---------------- PROJECTS SECTION ---------------- */
@@ -507,13 +545,16 @@ nav a:hover {
     left: 15px;
 }
 .card-text h3 {
-    font-size: 18px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     margin: 0 0 4px 0;
+    color: #f5f5f7;
 }
 .card-text p {
     font-size: 12px;
-    opacity: 0.8;
-    z
+    color: #a1a1a6;
+    letter-spacing: 0.01em;
 }
 
 /* HORIZONTAL VIGNETTE */
@@ -530,25 +571,38 @@ nav a:hover {
 /* ---------------- CONTACT SECTION ---------------- */
 #contact {
     background: #000;
-    padding: 60px 20px;
+    padding: 100px 20px;
     text-align: center;
     position: relative;
     z-index: 31;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#contact p {
+    color: #a1a1a6;
+    font-size: 17px;
+    margin-bottom: 28px;
 }
 
 /* ---------------- BUTTONS ---------------- */
 .button {
     display: inline-block;
-    padding: 10px 15px;
-    margin: 10px 5px 0 0;
-    background: #0366d6;
-    color: white;
+    padding: 10px 22px;
+    margin: 6px 6px 0;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f5f5f7;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 980px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .button:hover {
-    background: #024f9c;
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.22);
 }
 
 /* ---------------- RESPONSIVE ---------------- */
@@ -615,17 +669,18 @@ nav a:hover {
 }
 
 .music-overlay h2 {
-    font-size: 48px;
+    font-size: clamp(36px, 5vw, 64px);
     font-weight: 700;
-    color: white;
+    color: #f5f5f7;
     margin: 0;
-    letter-spacing: 2px;
+    letter-spacing: -0.03em;
 }
 
 .music-overlay p {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 17px;
+    color: #a1a1a6;
     margin: 0;
+    letter-spacing: 0.01em;
 }
 
 /* ---------------- FILMMAKING SECTION ---------------- */
@@ -897,4 +952,17 @@ nav a:hover {
     .project-card { flex: 1 1 17%; max-width: none; }
     #projects .section-title { margin: 10px 0 20px; }
     #projects .project-grid { margin: 0 auto; }
+}
+
+/* ---------------- FOOTER ---------------- */
+footer {
+    position: relative;
+    z-index: 32;
+    background: #000;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 28px 20px;
+    text-align: center;
+    font-size: 13px;
+    color: #6e6e73;
+    letter-spacing: 0.01em;
 }
