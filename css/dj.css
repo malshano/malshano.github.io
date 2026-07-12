@@ -1,12 +1,3 @@
-/* ---- NAV: fixed overlay on hero video ---- */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-}
-
 /* ---- HERO ---- */
 .dj-hero {
   position: relative;
@@ -170,6 +161,34 @@ nav {
   width: 100%;
 }
 
+/* ---- PHOTO SCROLL ---- */
+.photo-scroll {
+  overflow: hidden;
+  padding: 0 0 80px;
+}
+
+.photo-track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  animation: photo-scroll-loop 45s linear infinite;
+}
+
+.photo-track img {
+  height: 260px;
+  width: 260px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+@keyframes photo-scroll-loop {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 /* ---- AUDIO SECTION ---- */
 .audio-section {
   background: #0a0a0a;
@@ -233,4 +252,5 @@ nav {
   .dj-hero-overlay { padding: 28px 30px; }
   .audio-track { flex-direction: column; align-items: flex-start; }
   .audio-track audio { width: 100%; }
+  .photo-track img { height: 190px; width: 190px; }
 }
