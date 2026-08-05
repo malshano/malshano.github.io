@@ -1,4 +1,28 @@
-/* ---- HERO ---- */
+/* ---- PAGE-WIDE NEON HAZE ----
+   Fixed so it stays put while the page scrolls, giving every section the same
+   ambient wash. The hero video is opaque and sits on top, so it is unaffected. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background:
+    radial-gradient(34% 40% at 14% 22%, rgba(255, 46, 151, 0.20), transparent 70%),
+    radial-gradient(32% 38% at 86% 58%, rgba(0, 229, 255, 0.15), transparent 70%),
+    radial-gradient(30% 36% at 46% 88%, rgba(124, 77, 255, 0.18), transparent 70%);
+  animation: neon-drift 24s ease-in-out infinite alternate;
+}
+
+@keyframes neon-drift {
+  from { transform: translate3d(-2%, -1.5%, 0) scale(1); }
+  to   { transform: translate3d(2%, 1.5%, 0) scale(1.12); }
+}
+
+/* ---- HERO ----
+   Deliberately kept as it was. The opaque background keeps the page-wide haze
+   out of the hero even while the video is still loading. */
 .dj-hero {
   position: relative;
   height: 100vh;
@@ -6,6 +30,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #000;
 }
 
 .dj-hero-video {
@@ -50,32 +75,58 @@ nav {
   backdrop-filter: blur(8px);
   padding: 14px 0;
   z-index: 100;
+  border-bottom: 1px solid rgba(255, 105, 180, 0.18);
 }
 
-/* ---- SECTION LABELS ---- */
+nav a:hover {
+  color: #ff69b4;
+}
+
+/* ---- SECTION LABELS ----
+   One neon treatment shared by every heading on the page. */
 .section-label {
+  position: relative;
+  z-index: 1;
   text-align: center;
   padding: 60px 20px 30px;
 }
 
 .section-label h2 {
-  font-size: 36px;
+  font-size: clamp(36px, 6vw, 68px);
   font-weight: 700;
-  letter-spacing: 2px;
-  margin: 0 0 10px;
+  letter-spacing: 5px;
+  margin: 0 0 12px;
   text-transform: uppercase;
+  background: linear-gradient(90deg, #ff2e97, #ff69b4 30%, #7c4dff 62%, #00e5ff 82%, #ff2e97);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: neon-sweep 7s linear infinite;
+}
+
+@keyframes neon-sweep {
+  from { background-position: 0% 50%; }
+  to   { background-position: 250% 50%; }
 }
 
 .section-label p {
-  font-size: 15px;
-  opacity: 0.55;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.5;
   margin: 0;
 }
 
 /* ---- VIDEO GRID ---- */
+/* Fixed 2 columns rather than auto-fit: with 4 cards + 1 full-width feature
+   (and 2 in the Roskilde grid) every row fills exactly, leaving no empty cells. */
 .gig-grid {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
   max-width: 1200px;
   margin: 0 auto;
@@ -86,8 +137,21 @@ nav {
   position: relative;
   border-radius: 14px;
   overflow: hidden;
-  background: #111;
+  background: linear-gradient(145deg, rgba(24, 24, 29, 0.92), rgba(12, 12, 15, 0.92));
+  border: 1px solid #24242c;
   cursor: pointer;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.gig-card:hover {
+  border-color: #3c3c48;
+  transform: translateY(-3px);
+}
+
+.gig-card.revealed {
+  border-color: rgba(255, 105, 180, 0.55);
+  box-shadow: 0 0 0 1px rgba(255, 105, 180, 0.22),
+              0 16px 48px -16px rgba(255, 46, 151, 0.6);
 }
 
 .gig-card video {
@@ -105,6 +169,45 @@ nav {
   transform: scale(1);
 }
 
+/* ---- CLUB STROBE ----
+   js/dj-gigs.js fires .strobing on random unrevealed cards at random intervals.
+   Five flashes across 1.8s is ~2.8 per second — held just under the
+   3-per-second photosensitivity threshold (WCAG 2.3.1). Overall flashing is
+   made denser by firing bursts far more often and on several cards at once,
+   rather than by speeding up the flashes inside a burst. */
+.gig-card:not(.revealed) video.strobing {
+  animation: strobe-burst 1.8s linear;
+}
+
+@keyframes strobe-burst {
+  0%, 2%, 8%, 22%, 28%, 42%, 48%, 62%, 68%, 82%, 88%, 100% {
+    filter: blur(14px) brightness(1) saturate(1);
+  }
+  4%, 24%, 44%, 64%, 84% {
+    filter: blur(2px) brightness(2.15) saturate(1.5);
+  }
+}
+
+/* Card rim catches the flash too, so it reads as light hitting the booth. */
+.gig-card.strobing {
+  animation: strobe-rim 1.8s linear;
+}
+
+@keyframes strobe-rim {
+  0%, 2%, 8%, 22%, 28%, 42%, 48%, 62%, 68%, 82%, 88%, 100% {
+    border-color: #24242c;
+    box-shadow: none;
+  }
+  4%, 44%, 84% {
+    border-color: rgba(255, 105, 180, 0.85);
+    box-shadow: 0 0 26px -4px rgba(255, 46, 151, 0.75);
+  }
+  24%, 64% {
+    border-color: rgba(0, 229, 255, 0.8);
+    box-shadow: 0 0 26px -4px rgba(0, 229, 255, 0.6);
+  }
+}
+
 .gig-reveal-hint {
   position: absolute;
   inset: 0;
@@ -120,15 +223,30 @@ nav {
 .gig-reveal-hint svg {
   width: 40px;
   height: 40px;
-  opacity: 0.9;
+  filter: drop-shadow(0 0 10px rgba(255, 46, 151, 0.75));
 }
 
+/* Override the inline stroke="white" / fill="white" on the play glyph. */
+.gig-reveal-hint svg circle  { stroke: #ff69b4; }
+.gig-reveal-hint svg polygon { fill: #ff69b4; }
+
 .gig-reveal-hint span {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
-  opacity: 0.85;
+  color: #ff69b4;
+  text-shadow: 0 0 14px rgba(255, 46, 151, 0.6);
+}
+
+/* Slow breathe so an unopened card reads as waiting to be clicked. */
+.gig-card:not(.revealed) .gig-reveal-hint {
+  animation: hint-breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes hint-breathe {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
 }
 
 .gig-card.revealed .gig-reveal-hint {
@@ -142,10 +260,12 @@ nav {
   right: 0;
   padding: 32px 16px 14px;
   background: linear-gradient(transparent, rgba(0,0,0,0.85));
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 1px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
   text-transform: uppercase;
+  color: #ff69b4;
+  text-shadow: 0 0 14px rgba(255, 46, 151, 0.55);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -154,17 +274,29 @@ nav {
   opacity: 1;
 }
 
+/* Spans both columns edge to edge. The wider crop keeps it from towering
+   over the viewport at full page width. */
 .gig-card.full-width {
   grid-column: 1 / -1;
-  max-width: 628px;
-  margin: 0 auto;
-  width: 100%;
+  width: auto;
+  max-width: none;
+  margin: 0;
+}
+
+.gig-card.full-width video {
+  aspect-ratio: 21 / 9;
 }
 
 /* ---- PHOTO SCROLL ---- */
 .photo-scroll {
+  position: relative;
+  z-index: 1;
   overflow: hidden;
-  padding: 0 0 80px;
+  /* Sits directly under the hero now, so it carries its own top spacing. */
+  padding: 60px 0 10px;
+  /* Fade both ends so the strip bleeds into the page instead of hard-stopping. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
 }
 
 .photo-track {
@@ -182,6 +314,8 @@ nav {
   display: block;
   flex-shrink: 0;
   pointer-events: none;
+  border: 1px solid rgba(255, 105, 180, 0.18);
+  filter: saturate(1.12) contrast(1.04);
 }
 
 @keyframes photo-scroll-loop {
@@ -191,66 +325,239 @@ nav {
 
 /* ---- AUDIO SECTION ---- */
 .audio-section {
-  background: #0a0a0a;
-  border-top: 1px solid #1f1f1f;
-  padding: 60px 24px 80px;
+  position: relative;
+  z-index: 1;
+  /* Slightly translucent so the page-wide haze carries through this panel too. */
+  background: rgba(6, 6, 8, 0.86);
+  border-top: 1px solid rgba(255, 105, 180, 0.16);
+  padding: 60px 24px 90px;
+  overflow: hidden;
 }
 
+/* Slow drifting neon haze behind the cards; brightens while a mix plays. */
+.audio-section::before {
+  content: "";
+  position: absolute;
+  inset: -25% -12%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  transition: opacity 0.9s ease;
+  background:
+    radial-gradient(38% 45% at 18% 28%, rgba(255, 46, 151, 0.24), transparent 70%),
+    radial-gradient(36% 42% at 82% 68%, rgba(0, 229, 255, 0.18), transparent 70%),
+    radial-gradient(32% 40% at 50% 104%, rgba(124, 77, 255, 0.20), transparent 70%);
+  animation: mix-haze 19s ease-in-out infinite alternate;
+}
+
+.audio-section.mixes-live::before {
+  opacity: 1;
+}
+
+@keyframes mix-haze {
+  from { transform: translate3d(-3%, -2%, 0) scale(1); }
+  to   { transform: translate3d(3%, 2%, 0) scale(1.14); }
+}
+
+/* ---- MIXES HEADING ---- */
+/* Heading styling is inherited from .section-label — see SECTION LABELS above. */
+
+/* ---- MIX CARDS ---- */
 .audio-grid {
-  max-width: 860px;
+  position: relative;
+  z-index: 1;
+  max-width: 880px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
-.audio-track {
+.mix-card {
   display: flex;
   align-items: center;
   gap: 20px;
-  background: #141414;
-  border: 1px solid #2a2a2a;
-  border-radius: 12px;
-  padding: 18px 22px;
-  transition: border-color 0.2s ease;
+  background: linear-gradient(145deg, rgba(24, 24, 29, 0.92), rgba(12, 12, 15, 0.92));
+  border: 1px solid #24242c;
+  border-radius: 16px;
+  padding: 20px 24px;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.audio-track:hover {
-  border-color: #555;
+.mix-card:hover {
+  border-color: #3c3c48;
+  transform: translateY(-2px);
 }
 
-.audio-track-info {
+.mix-card.playing {
+  border-color: rgba(255, 105, 180, 0.55);
+  box-shadow: 0 0 0 1px rgba(255, 105, 180, 0.22),
+              0 14px 44px -14px rgba(255, 46, 151, 0.6);
+}
+
+/* The native <audio> is a no-JS fallback: swapped out once the custom
+   player initialises (js/dj-gigs.js adds .player-ready). */
+.mix-card .mix-index,
+.mix-card .mix-play,
+.mix-card .mix-body { display: none; }
+.mix-card audio { width: 100%; accent-color: #ff69b4; }
+
+.player-ready .mix-card .mix-index { display: block; }
+.player-ready .mix-card .mix-play  { display: flex; }
+.player-ready .mix-card .mix-body  { display: block; }
+.player-ready .mix-card audio      { display: none; }
+
+.mix-index {
+  flex-shrink: 0;
+  width: 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #4a4a57;
+  transition: color 0.25s ease;
+}
+
+.mix-card.playing .mix-index {
+  color: #ff69b4;
+}
+
+/* ---- TRANSPORT BUTTON ---- */
+.mix-play {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(135deg, #ff2e97, #7c4dff);
+  box-shadow: 0 6px 20px -6px rgba(255, 46, 151, 0.85);
+  transition: transform 0.2s ease;
+}
+
+.mix-play:hover  { transform: scale(1.08); }
+.mix-play:active { transform: scale(0.95); }
+
+.mix-play:focus-visible {
+  outline: 2px solid #00e5ff;
+  outline-offset: 3px;
+}
+
+.mix-card.playing .mix-play {
+  animation: mix-pulse 1.7s ease-out infinite;
+}
+
+@keyframes mix-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 46, 151, 0.5), 0 6px 20px -6px rgba(255, 46, 151, 0.85); }
+  70%  { box-shadow: 0 0 0 16px rgba(255, 46, 151, 0), 0 6px 20px -6px rgba(255, 46, 151, 0.85); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 46, 151, 0), 0 6px 20px -6px rgba(255, 46, 151, 0.85); }
+}
+
+.mix-icon {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.mix-icon-pause { display: none; }
+.mix-card.playing .mix-icon-play  { display: none; }
+.mix-card.playing .mix-icon-pause { display: inline; }
+
+/* ---- TRACK BODY ---- */
+.mix-body {
   flex: 1;
   min-width: 0;
 }
 
-.audio-track-info h3 {
-  margin: 0 0 4px;
-  font-size: 16px;
-  font-weight: 600;
+.mix-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.mix-head h3 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.audio-track-info span {
-  font-size: 12px;
-  opacity: 0.45;
-  letter-spacing: 0.5px;
+.mix-tag {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #ff69b4;
+  border: 1px solid rgba(255, 105, 180, 0.35);
+  background: rgba(255, 105, 180, 0.08);
+  border-radius: 980px;
+  padding: 3px 10px;
 }
 
-.audio-track audio {
-  flex-shrink: 0;
-  width: 280px;
-  height: 36px;
-  accent-color: #fff;
+/* Canvas doubles as the scrub bar — touch-action keeps a drag from scrolling. */
+.mix-viz {
+  display: block;
+  width: 100%;
+  height: 54px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.mix-card.playing .mix-viz {
+  filter: drop-shadow(0 0 7px rgba(255, 46, 151, 0.45));
+}
+
+.mix-times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 7px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  color: #6a6a78;
+}
+
+.mix-card.playing .mix-cur {
+  color: #ff69b4;
+}
+
+/* Respect users who ask for less motion: kill the ambient loops.
+   The visualiser itself only runs while audio is deliberately playing. */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+  .audio-section::before { animation: none; }
+  .section-label h2 { animation: none; }
+  .gig-card:not(.revealed) .gig-reveal-hint { animation: none; opacity: 0.9; }
+  .photo-track { animation: none; }
+  .gig-card.strobing,
+  .gig-card:not(.revealed) video.strobing { animation: none; }
+  .mix-card.playing .mix-play { animation: none; }
+  .mix-card:hover,
+  .gig-card:hover { transform: none; }
 }
 
 /* ---- RESPONSIVE ---- */
 @media (max-width: 600px) {
   .dj-hero-overlay h1 { font-size: 38px; }
   .dj-hero-overlay { padding: 28px 30px; }
-  .audio-track { flex-direction: column; align-items: flex-start; }
-  .audio-track audio { width: 100%; }
   .photo-track img { height: 190px; width: 190px; }
+  .gig-grid { grid-template-columns: 1fr; }
+  .gig-card.full-width video { aspect-ratio: 16 / 9; }
+
+  .mix-card { gap: 14px; padding: 16px 18px; }
+  .player-ready .mix-card .mix-index { display: none; }
+  .mix-play { width: 48px; height: 48px; }
+  .mix-icon { width: 19px; height: 19px; }
+  .mix-head h3 { font-size: 16px; }
+  .mix-viz { height: 44px; }
 }
