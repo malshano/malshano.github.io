@@ -170,42 +170,36 @@ nav a:hover {
 }
 
 /* ---- CLUB STROBE ----
-   js/dj-gigs.js fires .strobing on random unrevealed cards at random intervals.
-   Five flashes across 1.8s is ~2.8 per second — held just under the
-   3-per-second photosensitivity threshold (WCAG 2.3.1). Overall flashing is
-   made denser by firing bursts far more often and on several cards at once,
-   rather than by speeding up the flashes inside a burst. */
+   js/dj-gigs.js fires .strobing on one unrevealed card at a time: two flashes,
+   then the card goes dark and a pause follows before a different card is
+   picked. The two flashes are 0.36s apart (~2.8 per second), under the
+   3-per-second photosensitivity threshold (WCAG 2.3.1). */
+/* A single flash is a fast transition rather than a keyframe animation: that
+   is what lets js/dj-gigs.js randomise the gap between flashes per burst,
+   which fixed keyframe percentages cannot do. CSS owns how a flash looks,
+   the script owns the rhythm — it adds .lit for a moment, then removes it. */
 .gig-card:not(.revealed) video.strobing {
-  animation: strobe-burst 1.8s linear;
+  transition: filter 35ms linear;
 }
 
-@keyframes strobe-burst {
-  0%, 2%, 8%, 22%, 28%, 42%, 48%, 62%, 68%, 82%, 88%, 100% {
-    filter: blur(14px) brightness(1) saturate(1);
-  }
-  4%, 24%, 44%, 64%, 84% {
-    filter: blur(2px) brightness(2.15) saturate(1.5);
-  }
+.gig-card:not(.revealed) video.strobing.lit {
+  filter: blur(2px) brightness(2.15) saturate(1.5);
 }
 
 /* Card rim catches the flash too, so it reads as light hitting the booth. */
 .gig-card.strobing {
-  animation: strobe-rim 1.8s linear;
+  transition: border-color 35ms linear, box-shadow 35ms linear;
 }
 
-@keyframes strobe-rim {
-  0%, 2%, 8%, 22%, 28%, 42%, 48%, 62%, 68%, 82%, 88%, 100% {
-    border-color: #24242c;
-    box-shadow: none;
-  }
-  4%, 44%, 84% {
-    border-color: rgba(255, 105, 180, 0.85);
-    box-shadow: 0 0 26px -4px rgba(255, 46, 151, 0.75);
-  }
-  24%, 64% {
-    border-color: rgba(0, 229, 255, 0.8);
-    box-shadow: 0 0 26px -4px rgba(0, 229, 255, 0.6);
-  }
+.gig-card.strobing.lit {
+  border-color: rgba(255, 105, 180, 0.85);
+  box-shadow: 0 0 26px -4px rgba(255, 46, 151, 0.75);
+}
+
+/* Every other flash in a burst goes cyan instead of pink. */
+.gig-card.strobing.lit.cool {
+  border-color: rgba(0, 229, 255, 0.8);
+  box-shadow: 0 0 26px -4px rgba(0, 229, 255, 0.6);
 }
 
 .gig-reveal-hint {
@@ -539,8 +533,15 @@ nav a:hover {
   .section-label h2 { animation: none; }
   .gig-card:not(.revealed) .gig-reveal-hint { animation: none; opacity: 0.9; }
   .photo-track { animation: none; }
-  .gig-card.strobing,
-  .gig-card:not(.revealed) video.strobing { animation: none; }
+  /* The strobe is gated in JS as well; neutralise it here too in case the
+     setting is changed after the page has loaded. */
+  .gig-card:not(.revealed) video.strobing.lit {
+    filter: blur(14px) brightness(1) saturate(1);
+  }
+  .gig-card.strobing.lit {
+    border-color: #24242c;
+    box-shadow: none;
+  }
   .mix-card.playing .mix-play { animation: none; }
   .mix-card:hover,
   .gig-card:hover { transform: none; }

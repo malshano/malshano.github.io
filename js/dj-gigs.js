@@ -48,6 +48,24 @@ function revealCard(card) {
    videos reads like a dark room being lit by a strobe. Timing is random per
    burst rather than a CSS loop, which would have every card pulsing in step. */
 
+var lastStrobed = null;
+
+var FLASHES_PER_BURST = 3;
+var FLASH_MS = 85;        // how long a single flash stays lit
+var GAP_MIN_MS = 95;      // dark gap between flashes, randomised per gap
+var GAP_MAX_MS = 205;
+var BURST_TAIL_MS = 160;  // dark beat after the last flash, before the pause
+
+function clearStrobe(card) {
+    var video = card.querySelector('video');
+    clearTimeout(card.strobeTimer);
+    card.strobeTimer = null;
+    card.classList.remove('strobing', 'lit', 'cool');
+    if (video) {
+        video.classList.remove('strobing', 'lit');
+    }
+}
+
 function fireStrobe(card) {
     var video = card.querySelector('video');
     if (!video || card.classList.contains('revealed') ||
@@ -58,19 +76,59 @@ function fireStrobe(card) {
     card.classList.add('strobing');
     video.classList.add('strobing');
 
-    function clear() {
-        clearTimeout(card.strobeTimer);
-        card.strobeTimer = null;
-        card.classList.remove('strobing');
-        video.classList.remove('strobing');
-        video.removeEventListener('animationend', clear);
+    var fired = 0;
+
+    function lightOn() {
+        // Alternate the rim colour so a burst reads pink / cyan / pink.
+        if (fired % 2 === 1) {
+            card.classList.add('cool');
+        } else {
+            card.classList.remove('cool');
+        }
+        card.classList.add('lit');
+        video.classList.add('lit');
+        card.strobeTimer = setTimeout(lightOff, FLASH_MS);
     }
-    video.addEventListener('animationend', clear);
-    // Belt and braces: if the animation never fires (tab hidden, reduced
-    // motion) the classes still come off so the card can strobe again later.
-    // Cancelled by clear() so a finished burst can't cut short the next one.
-    // Must stay longer than the 1.8s burst or it would clip its own animation.
-    card.strobeTimer = setTimeout(clear, 2100);
+
+    function lightOff() {
+        card.classList.remove('lit');
+        video.classList.remove('lit');
+        fired++;
+
+        if (fired < FLASHES_PER_BURST) {
+            // Each gap is rolled separately, so the three hits land unevenly
+            // instead of on a fixed beat.
+            var gap = GAP_MIN_MS + Math.random() * (GAP_MAX_MS - GAP_MIN_MS);
+            card.strobeTimer = setTimeout(lightOn, gap);
+        } else {
+            card.strobeTimer = setTimeout(function () {
+                clearStrobe(card);
+            }, BURST_TAIL_MS);
+        }
+    }
+
+    lightOn();
+}
+
+function strobeOnce() {
+    // Sweep up anything still lit from a previous burst first. Without this a
+    // single dropped animationend would leave a card marked forever and stall
+    // the whole sequence, since the next pick skips cards that are strobing.
+    [].slice.call(document.querySelectorAll('.gig-card.strobing')).forEach(clearStrobe);
+
+    // Prefer a card other than the one that just flashed.
+    var dark = idleCards().filter(function (card) {
+        return card !== lastStrobed;
+    });
+    if (!dark.length) {
+        dark = idleCards();
+    }
+    if (!dark.length) {
+        return;
+    }
+
+    lastStrobed = dark[Math.floor(Math.random() * dark.length)];
+    fireStrobe(lastStrobed);
 }
 
 function idleCards() {
@@ -79,27 +137,11 @@ function idleCards() {
 }
 
 function scheduleStrobe() {
-    // Uneven gaps keep it feeling live rather than metronomic.
-    var delay = 220 + Math.random() * 1100;
+    // Pause between bursts. Uneven so it feels live rather than metronomic.
+    var delay = 1500 + Math.random() * 2000;
 
     setTimeout(function () {
-        var dark = idleCards();
-        if (dark.length) {
-            fireStrobe(dark[Math.floor(Math.random() * dark.length)]);
-
-            // Often a second card catches the same flash, sometimes a third,
-            // so the room reads as lit rather than one panel blinking. They
-            // start on this same tick so they flash in phase, the way one
-            // strobe lights several surfaces at once — staggering them would
-            // interleave the flashes and double the rate the eye actually sees.
-            var extras = Math.random() < 0.55 ? (Math.random() < 0.4 ? 2 : 1) : 0;
-            for (var n = 0; n < extras; n++) {
-                var others = idleCards();
-                if (others.length) {
-                    fireStrobe(others[Math.floor(Math.random() * others.length)]);
-                }
-            }
-        }
+        strobeOnce();
         scheduleStrobe();
     }, delay);
 }
