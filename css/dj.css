@@ -368,6 +368,8 @@ nav a:hover {
 }
 
 .mix-card {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -376,6 +378,27 @@ nav a:hover {
   border-radius: 16px;
   padding: 20px 24px;
   transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* The dancing crowd, drawn by js/dj-gigs.js onto a canvas the size of the
+   whole card. pointer-events:none keeps every click going through to the
+   waveform underneath, so the scrub bar still works where they overlap it,
+   and the card's overflow:hidden clips them to the rounded corners. */
+.mix-crowd {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Content sits above the crowd, so a dancer can never obscure a label. */
+.player-ready .mix-card .mix-index,
+.player-ready .mix-card .mix-play,
+.player-ready .mix-card .mix-body {
+  position: relative;
+  z-index: 1;
 }
 
 .mix-card:hover {
