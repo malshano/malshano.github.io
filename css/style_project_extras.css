@@ -1,0 +1,46 @@
+/* Shared extras for individual project pages (rule lists, inline code, footer).
+   Pairs with style_projects.css — link both. */
+
+.rule-list {
+    list-style: none;
+    padding: 0;
+    margin: 1em 0 1.5em;
+}
+
+.rule-list li {
+    padding: 10px 0 10px 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.72);
+    font-size: 1rem;
+    position: relative;
+}
+
+.rule-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: rgba(255,255,255,0.35);
+}
+
+.rule-list li:last-child { border-bottom: none; }
+
+/* Inline code references (file paths, function names) inside article copy */
+.content code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.86em;
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.055);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 4px;
+    padding: 1px 5px;
+    white-space: nowrap;
+}
+
+footer {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 40px 24px;
+    text-align: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.82rem;
+    letter-spacing: 0.3px;
+}
