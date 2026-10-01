@@ -281,6 +281,50 @@ nav a:hover {
   aspect-ratio: 21 / 9;
 }
 
+/* Phone-shot vertical clips (Ibiza): three 9:16 cards per row instead of
+   cropping them into the 16:9 landscape frame. */
+.gig-grid.portrait {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 960px;
+}
+
+.gig-grid.portrait .gig-card video {
+  aspect-ratio: 9 / 16;
+}
+
+/* ---- PULL QUOTE ---- */
+.gig-quote {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto 40px;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.gig-quote p {
+  margin: 0 0 12px;
+  font-size: clamp(22px, 3.4vw, 34px);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.35;
+  color: #fff;
+  text-shadow: 0 0 18px rgba(255, 46, 151, 0.55), 0 0 42px rgba(124, 77, 255, 0.35);
+}
+
+.gig-quote cite {
+  font-size: 12px;
+  font-style: normal;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ff69b4;
+  opacity: 0.85;
+}
+
+.gig-quote cite::before {
+  content: "— ";
+}
+
 /* ---- PHOTO SCROLL ---- */
 .photo-scroll {
   position: relative;
@@ -577,6 +621,10 @@ nav a:hover {
   .photo-track img { height: 190px; width: 190px; }
   .gig-grid { grid-template-columns: 1fr; }
   .gig-card.full-width video { aspect-ratio: 16 / 9; }
+  /* Stacking three full-height 9:16 clips is a lot of scrolling; keep them
+     side by side as a compact row instead. */
+  .gig-grid.portrait { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 16px 60px; }
+  .gig-grid.portrait .gig-reveal-hint span { display: none; }
 
   .mix-card { gap: 14px; padding: 16px 18px; }
   .player-ready .mix-card .mix-index { display: none; }
