@@ -976,6 +976,16 @@ nav a:hover {
     #projects .project-grid { margin: 0 auto; }
 }
 
+/* Wide screens: every card in one row, all the same small size.
+   Cards share the width equally, so adding a card shrinks all of them. */
+@media (min-width: 1100px) {
+    .project-card { flex: 1 1 0; min-width: 0; max-width: 220px; }
+    #projects .project-grid { flex-wrap: nowrap; }
+    #projects .card-text { left: 10px; right: 10px; bottom: 12px; }
+    #projects .card-text h3 { font-size: 13px; }
+    #projects .card-text p { font-size: 11px; }
+}
+
 /* ---------------- FOOTER ---------------- */
 footer {
     position: relative;
