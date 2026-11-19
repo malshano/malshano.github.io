@@ -324,3 +324,22 @@ tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
   .container { padding: 40px 20px 60px; }
   .img-grid-2 { grid-template-columns: 1fr; }
 }
+
+/* ---- FIGURE VIDEO ---- */
+figure video {
+  width: 100%;
+  display: block;
+  background: #111;
+}
+
+/* ---- SIMPLE BULLET LIST ---- */
+.simple-list {
+  list-style: disc;
+  padding-left: 1.4em;
+  margin: 0 0 1.6em;
+}
+.simple-list li {
+  padding: 3px 0;
+  color: rgba(255,255,255,0.72);
+  font-size: 1rem;
+}

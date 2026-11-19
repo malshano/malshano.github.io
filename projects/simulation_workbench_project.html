@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanical Simulation Workbench | Malshan Perera</title>
+<link rel="icon" type="image/png" href="../assets/icons/sitelogo.png">
+<link rel="apple-touch-icon" href="../assets/icons/sitelogo.png">
+<meta property="og:title" content="Mechanical Simulation Workbench">
+<meta property="og:description" content="A project by Malshan Perera.">
+<meta property="og:image" content="https://malshano.com/assets/icons/og-card.png">
+<meta property="og:url" content="https://malshano.com/projects/simulation_workbench_project.html">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../css/style_projects.css">
+    <link rel="stylesheet" href="../css/style_project_extras.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="../">Home</a>
+  <a href="../#projects">Projects</a>
+  <a href="../#music">Music</a>
+  <a href="../#filmmaking">Films</a>
+  <a href="../#contact">Contact</a>
+</nav>
+
+<header>
+    <p class="tag">Open Source · Simulation / Software</p>
+    <h1>Mechanical Simulation Workbench</h1>
+    <p class="subtitle">An open-source simulator that runs in the browser</p>
+    <div class="meta">2026 &nbsp;·&nbsp; Python / OpenFOAM</div>
+</header>
+
+<div class="content">
+
+    <h2 id="idea">The Idea</h2>
+
+    <p>
+        Finite element analysis software makes it relatively easy to try several iterations of one design.
+    </p>
+
+    <p>
+        However, a license often costs quite a bit. As a hobbyist, I cannot find an excuse to pay so much for a
+        license.
+    </p>
+
+    <p>
+        There are several open-source alternatives. OpenFOAM is one for CFD. However, they have a sharp learning
+        curve and a user interface that is not very friendly.
+    </p>
+
+    <p>
+        To use OpenFOAM, you must change case files in text format. With an interface it becomes much easier to
+        use. This is what first inspired me to make the Mechanical Simulation Workbench. It started as a CFD
+        interface for OpenFOAM. Then it grew into other simulation areas like heat transfer, vibration and
+        static structural analysis.
+    </p>
+
+    <p>
+        Then I tried to match use cases, so that verifying and validating the results becomes easier.
+    </p>
+
+    <h2 id="verifying">Verifying the Numbers</h2>
+
+    <p>
+        I have also added a mesh independence study. You can run the same case with different mesh sizes and see
+        how the result changes. If it does not change, you have a good mesh. The comparison runs through a single
+        button.
+    </p>
+
+    <p>
+        Residuals are also shown for each iteration to verify that the solution converges.
+    </p>
+
+    <h2 id="validating">Validating the Numbers</h2>
+
+    <p>
+        To check the numbers, I used empirical methods. I tested each case against the result I expect from
+        theory.
+    </p>
+
+    <ul class="simple-list">
+        <li>Vibration: a cantilever beam gives 410.2 Hz in the workbench and 408.3 Hz from beam theory</li>
+        <li>Heat: a vertical heated plate in still air gives 61.8 °C from CFD and 63.6 °C from the Churchill-Chu correlation</li>
+        <li>Propeller: I measured the thrust from the simulation and compared it with the thrust I expect to get</li>
+    </ul>
+
+    <h3>Vibration</h3>
+
+    <p>
+        I compared the natural frequencies of beams with beam theory. Euler-Bernoulli theory ignores shear
+        deformation. Timoshenko theory includes it, so I compared with both.
+    </p>
+
+    <table>
+        <tr><th>Beam and mode</th><th>Euler-Bernoulli [Hz]</th><th>Timoshenko [Hz]</th><th>Workbench [Hz]</th></tr>
+        <tr><td>Cantilever, thin direction, bending 1</td><td>61.2</td><td>61.19</td><td>61.63</td></tr>
+        <tr><td>Cantilever, wide direction, bending 1</td><td>408</td><td>404.8</td><td>405.6</td></tr>
+        <tr><td>Cantilever, wide direction, bending 3</td><td>7160</td><td>6380</td><td>6399</td></tr>
+        <tr><td>Cantilever, first axial mode</td><td>6314</td><td>-</td><td>6326</td></tr>
+        <tr><td>Free-free bar, bending 1</td><td>1298</td><td>1286</td><td>1287</td></tr>
+        <tr><td>Free-free bar, bending 3</td><td>7015</td><td>6684</td><td>6690</td></tr>
+    </table>
+
+    <h3>Heat</h3>
+
+    <p>
+        The test is steady conduction in a 100 x 20 x 20 mm aluminium bar. The answer is known from a hand
+        calculation.
+    </p>
+
+    <table>
+        <tr><th>Case</th><th>Result</th><th>Hand calculation</th><th>Workbench</th></tr>
+        <tr><td>Ends at 100 and 20 °C</td><td>Heat flow</td><td>53.440 W</td><td>53.440 W</td></tr>
+        <tr><td>One end at 100 °C, convection at the other end</td><td>Heat flow</td><td>12.313 W</td><td>12.310 W</td></tr>
+        <tr><td>Same case</td><td>Temperature of the convective end</td><td>81.57 °C</td><td>81.57 °C</td></tr>
+        <tr><td>20 W generated in the bar, ends at 20 °C</td><td>Maximum temperature</td><td>23.743 °C</td><td>23.74 °C</td></tr>
+    </table>
+
+    <p>
+        Where the exact answer is a straight line, the solver gives it to rounding error. Heat in equals heat
+        out. With heat generation the exact answer is a parabola. A linear element cannot give a parabola
+        exactly. The error is 0.19 % of the temperature rise on a 4 mm mesh, and it falls on a finer mesh.
+    </p>
+
+    <h3>A Real Case: Drone Frame</h3>
+
+    <p>
+        I also ran a vibration study on a drone frame. The motors turn at 8500 rpm and the propellers have three
+        blades. The blade passing frequency is 425 Hz. If a natural frequency of the frame is close to it, the
+        frame can resonate.
+    </p>
+
+    <table>
+        <tr><th>Case</th><th>Mode 1 [Hz]</th><th>Mode 2 [Hz]</th></tr>
+        <tr><td>Motors 62 g, battery 300 g (baseline)</td><td>400</td><td>428</td></tr>
+        <tr><td>Motors 40 g</td><td>446</td><td>476</td></tr>
+        <tr><td>Motors 90 g</td><td>356</td><td>384</td></tr>
+        <tr><td>Frame only, no added mass</td><td>583</td><td>627</td></tr>
+    </table>
+
+    <p>
+        The first two modes are arm bending. In the baseline case they are at 400 Hz and 428 Hz, close to the
+        blade passing frequency. This is a resonance risk to check on the real frame.
+    </p>
+
+    <p>
+        The motor and battery masses are my assumptions, and the table shows how much they change the result.
+        The carbon fibre is modelled as an isotropic material. The CAD frame is solid and heavier than a real
+        frame, and the model has no joints. The real frequencies are probably lower. I used a half model, so
+        only the modes that are symmetric across the cut plane are shown.
+    </p>
+
+    <h2 id="parts">What It Can Do Now</h2>
+
+    <p>
+        Right now it has several different parts.
+    </p>
+
+    <ul class="simple-list">
+        <li>Heat transfer in solids, with natural convection and radiation</li>
+        <li>Static structural: stress, deflection and safety factor</li>
+        <li>Vibration: natural frequencies and mode shapes</li>
+        <li>Electronics cooling with OpenFOAM, with a fan (forced convection) or without one</li>
+        <li>External aerodynamics with OpenFOAM, including moving and sliding meshes (for example, propellers)</li>
+    </ul>
+
+    <p>
+        The solid studies use built-in FEM solvers. On Windows the workbench downloads OpenFOAM into its own
+        folder the first time it starts, so you install nothing. You can also use Claude to help you set up the
+        simulation. The panel on the side gives Claude access to your project, and it can set up the case as you
+        ask.
+    </p>
+
+    <figure>
+        <video controls muted loop playsinline preload="metadata">
+            <source src="../assets/videos/simworkbench/interface-run.mp4" type="video/mp4">
+        </video>
+        <figcaption>The workbench running an aerodynamics study, with the Claude assistant setting up the case.</figcaption>
+    </figure>
+
+    <h2 id="propeller">Testing It on a Propeller</h2>
+
+    <p>
+        To test the CFD interface I simulated a propeller on a drone. I could give a few reasons for this case,
+        but mostly it was because it looked cool.
+    </p>
+
+    <p>
+        The propeller was simulated as a sliding mesh with a set speed of 24000 rpm. The drone was also moving
+        through the air at 10 m/s.
+    </p>
+
+
+    <h3>Meshing</h3>
+
+    <p>
+        I added a few different meshing techniques to make the best use of the computer. 
+        If the cells are small everywhere, the run takes too long. These are the tools I use to control the cell size.
+    </p>
+
+    <ul class="simple-list">
+        <li>A global size, from a coarse preset to a fine one</li>
+        <li>A smaller size on one face or one part</li>
+        <li>Refinement boxes and cylinders, for example in the wake behind the propeller</li>
+        <li>Thin layers of cells on the walls, for the air next to the surface</li>
+    </ul>
+
+    <p>
+        The sliding mesh was the difficult one. My first runs failed within one or two degrees of rotation,
+        because the two sides of the sliding interface shared points. A parallel run also crashed the MPI
+        library. The fix was to keep each interface on one processor.
+    </p>
+
+    <div class="two-up">
+        <figure>
+            <video controls muted loop playsinline preload="metadata">
+                <source src="../assets/videos/simworkbench/propeller-24000rpm.mp4" type="video/mp4">
+            </video>
+            <figcaption>Propeller at 24000 rpm, transient sliding mesh. Vortex surfaces coloured by velocity.</figcaption>
+        </figure>
+        <figure>
+            <video controls muted loop playsinline preload="metadata">
+                <source src="../assets/videos/simworkbench/drone-vortex.mp4" type="video/mp4">
+            </video>
+            <figcaption>Vortex surfaces around the whole drone, coloured by velocity.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="limits">Assumptions and Limitations</h2>
+
+    <p>
+        The meshes are tetrahedra only. Drag and heat transfer from a coarse mesh are only a rough indication.
+        The flow solver is incompressible, so a propeller with tips near the speed of sound is outside its range.
+        Vibration analysis is linear and has no damping.
+    </p>
+
+    <h2 id="status">Where It Is Now</h2>
+
+    <p>
+        Version 0.3.0 is out now. Feedback, bug reports and contributions are very welcome.
+    </p>
+
+    <ul class="simple-list">
+        <li><a href="https://github.com/malshano/Open_Mechanical_Simulation_Workbench/releases/latest">Latest release (v0.3.0)</a></li>
+        <li><a href="https://github.com/malshano/Open_Mechanical_Simulation_Workbench">Source code and manuals on GitHub</a></li>
+    </ul>
+
+    <div class="note">
+        <strong>Note</strong>
+        This is a personal tool and not certified software. Check important results with a hand calculation or
+        a certified tool.
+    </div>
+
+</div>
+
+<footer>
+    Mechanical Simulation Workbench &nbsp;·&nbsp; Open Source Project
+</footer>
+
+</body>
+</html>
